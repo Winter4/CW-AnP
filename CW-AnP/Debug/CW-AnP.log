@@ -1,0 +1,4 @@
+﻿  Main.cpp
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.h(3,14): error C2011: Array: переопределение типа "struct"
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Sorting.h(6): message : см. объявление "Array"
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Main.cpp(12,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
