@@ -2,6 +2,9 @@
 #include <iostream>
 #include "Struct.h"
 
+#include "math.h"
+#include "conio.h"
+
 // флотовый рандом
 float FloatRandom(float leftBorder, float rightBorder)
 {

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "windows.h"
 #include "math.h"
+#include "conio.h"
 
 void Geometry();
 

@@ -2,7 +2,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "Geometry.h"
-#include "conio.h"
 
 #define DX 20
 #define DY 20

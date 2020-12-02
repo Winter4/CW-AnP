@@ -1,10 +1,6 @@
 #pragma once
 
 #include <iostream>
-
-#include "math.h"
-#include "conio.h"
-
 #include "ArrayForming.h"
 
 // задание сортировки
