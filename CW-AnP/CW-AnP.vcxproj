@@ -139,11 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="HandleFile.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Sorting.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArrayForming.h" />
+    <ClInclude Include="Geometry.h" />
     <ClInclude Include="HandleFile.h" />
+    <ClInclude Include="Sorting.h" />
+    <ClInclude Include="Struct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

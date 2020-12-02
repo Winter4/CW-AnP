@@ -5,15 +5,9 @@
 
 void Sorting()
 {
-	Array array;
+	MyArray array = { 0 };
 
-	// ввод кол-ва элементов
-	printf(" Enter the items number: "); 
-	scanf("%d", &array.number);
-	// выделение памяти под элементы
-	array.items = new float[array.number];
-
-	FormArray(array); // сформировать массив
+	FormArrayMini(&array); // сформировать массив
 	SortArray(array); // отсортировать массив (задание по варианту)
 	printf ("\nThe array has been sorted.");
 	
@@ -43,8 +37,14 @@ void Sorting()
 
 // __________________________ Формирование массива _________________________
 
-void FormArray(Array array)
+void FormArray(MyArray* array)
 {
+	// ввод кол-ва элементов
+	printf(" Enter the number of array items: ");
+	scanf("%d", &array->number);
+	
+	array->items = new float[array->number];
+
 	printf("\nChoose the method of array forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
 	printf("\n Your choice: ");
 	int choice;
@@ -52,36 +52,17 @@ void FormArray(Array array)
 
 	switch (choice) {
 	case 1:
-		EnterArrayByKeyboard(array);
+		EnterArrayByKeyboard(*array);
 		break;
 	case 2:
-		RandomArray(array);
+		RandomArray(*array);
 		break;
 	case 3:
-		GetArrayFromFile(array);
+		GetArrayFromFile(*array);
 	}
 }
 
-void EnterArrayByKeyboard(Array array)
-{
-	printf("\n");
-	for (int i = 0; i < array.number; i++) {
-		printf(" Item %d: ", i + 1);
-		scanf_s("%f", &array.items[i]);
-	}
-}
-
-void RandomArray(Array array)
-{
-	printf("\nThe array: \n");
-	for (int i = 0; i < array.number; i++) {
-		// (b - a) * rand() / RAND_MAX + a
-		array.items[i] = FloatRandom(-2 * array.number, 2 * array.number);
-		printf("Item %d: %.1f \n", i + 1, array.items[i]);
-	}
-}
-
-void GetArrayFromFile(Array array)
+void GetArrayFromFile(MyArray array)
 {
 	FILE* file;
 	char fileName[12];
@@ -109,7 +90,7 @@ void GetArrayFromFile(Array array)
 
 // _______________________ Служебные функции ___________________________
 
-void PrintAll(Array array)
+void PrintAll(MyArray array)
 {
 	printf("\nThe array: \n");
 	for (int i = 0; i < array.number; i++) 
@@ -123,15 +104,12 @@ void SwapTwoItems(float* item1, float* item2)
 	*item2 = tmp;
 }
 
-float FloatRandom(float leftBorder, float rightBorder)
-{
-	return (rightBorder - leftBorder) * rand() / RAND_MAX + leftBorder;
-}
-
 // _______________________ Задание по варианту _________________________
 
-void SortArray(Array array)
+void SortArray(MyArray array)
 {
+	// передать диапазон и флаг, в какую сторону
+	// 0 - n/2; n/2 + 1 - n
 	int flag;
 	do {
 		flag = 0; // обнуляем флаг перед заходом на цикл
@@ -149,7 +127,7 @@ void SortArray(Array array)
 	} while (flag != 0);
 }
 
-void PrintByStep(Array array)
+void PrintByStep(MyArray array)
 {
 	printf("\nPress 'N' button (next) to print one item; \nPress 'S' button (skip) to print all items. \nThe array: ");
 	int key = 0, i = 0;

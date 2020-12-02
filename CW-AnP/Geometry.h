@@ -1,4 +1,5 @@
-/*#pragma once
+#pragma once
+
 #include <iostream>
 #include "windows.h"
 #include "math.h"
@@ -50,7 +51,7 @@ void getCirclesFromFile(Circle*, int);
 void myTask(Dot*, Circle*, int, int);
 
 // __________________________ Графика _____________________________
-
+/*
 //void dot(HDC hDC, int x, int y, COLORREF Color);
 void clearscreen(int red, int green, int blue);
 void DrawAxis(Limits, Scale, int*, int*);

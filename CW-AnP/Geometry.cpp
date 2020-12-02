@@ -22,7 +22,7 @@ HFONT hFont, hOldFont;
 LOGFONT Lf = { 0 };
 
 void Geometry() {
-	/*	printf("The <Geometry> task. \n");
+		printf("The <Geometry> task. \n");
 		printf(" Please enter the amount of dots (A plenty): "); // ввод количества точек А
 		int dotsAmount; // кол-во точек А
 		do {
@@ -45,7 +45,7 @@ void Geometry() {
 		circles = new Circle[circlesAmount];
 		formCircles(circles, circlesAmount); // формирование массива окружностей В (вершины)
 
-		myTask(dots, circles, dotsAmount, circlesAmount); */
+		myTask(dots, circles, dotsAmount, circlesAmount); 
 
 		// __________________________________ Графика _____________________________
 
@@ -72,8 +72,8 @@ void Geometry() {
 	ReleaseDC(hWnd, hDC);
 	return;
 
-	/*delete[] dots;
-	delete[] circles;*/
+	delete[] dots;
+	delete[] circles;
 }
 
 // __________________ Обработка точек ______________________
@@ -264,7 +264,7 @@ void myTask(Dot* dots, Circle* circles, int dotsAmount, int circlesAmount)
 }
 
 // _______________________________ Графика _______________________________________
-
+/*
 void clearscreen(int red, int green, int blue)
 {
 	hBrush = CreateSolidBrush(RGB(red, green, blue));
@@ -413,3 +413,4 @@ void Draw(Dot* dots, Circle* circles, Limits limits, int dotsAmount, int circles
 
 	DeleteObject(hPen);
 }
+*/

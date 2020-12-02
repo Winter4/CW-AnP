@@ -1,34 +1,28 @@
 #pragma once
-#include "math.h"
+
 #include <iostream>
+
+#include "math.h"
 #include "conio.h"
 
-struct Array { // структура массива
-	float* items; // элементы
-	int number; // кол-во элементов
-};
+#include "ArrayForming.h"
 
 // задание сортировки
 void Sorting();
 
 // сформировать массив (parent)
-void FormArray(Array);
-// ввести массив с клавиатуры (child 1)
-void EnterArrayByKeyboard(Array);
-// зарандомить массив (child 2)
-void RandomArray(Array);
+void FormArrayMini(MyArray*);
 // считать массив из файла (child 3)
-void GetArrayFromFile(Array);
+void GetArrayFromFile(MyArray);
 
 // вывести массив
-void PrintAll(Array);
+void PrintAll(MyArray);
 // свап двух значений
 void SwapTwoItems(float*, float*);
 // флотовый рандом
-float FloatRandom(float, float);
 
 // сортировка массива
-void SortArray(Array);
+void SortArray(MyArray);
 // вывод по шагово
-void PrintByStep(Array);
+void PrintByStep(MyArray);
 

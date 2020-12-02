@@ -1,24 +1,16 @@
-#include <iostream>
+#pragma once
 
-struct Array { // структура массива
-	float* items; // элементы
-	int number; // кол-во элементов
-};
+#include <iostream>
+#include "ArrayForming.h"
 
 //основная функция
 void HandleFile();
 
 // сформировать массив (parent)
-void FormArray(Array*);
-// ввести массив с клавиатуры (child 1)
-void EnterArrayByKeyboard(Array);
-// зарандомить массив (child 2)
-void RandomArray(Array);
-// флотовый рандом
-float FloatRandom(float, float);
+void FormArray(MyArray*);
 
 // занести массив в файл
-void WriteArrayToFile(Array, FILE*);
+void WriteArrayToFile(MyArray, FILE*);
 // задание по варианту
 void MyTask(FILE*, int*);
 // найти среднее арифметичсекое

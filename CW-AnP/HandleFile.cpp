@@ -2,9 +2,12 @@
 
 #include "HandleFile.h"
 
+// fwrite
+// fread
+
 void HandleFile()
 {
-	Array array = {0};
+	MyArray array = {0};
 	FormArray(&array); // формируем массив
 
 	// создаём файл
@@ -30,11 +33,12 @@ void HandleFile()
 	system("pause");
 }
 
-void FormArray(Array* array)
+void FormArray(MyArray* array)
 {
 	printf(" Enter the number of array items: ");
 	scanf("%d", &array->number);
-	(*array).items = new float[(*array).number];
+
+	array->items = new float[array->number];
 
 	printf("\nChoose the method of array forming \n 1 - Enter by keyboard \n 2 - Random");
 	printf("\n Your choice: ");
@@ -51,31 +55,7 @@ void FormArray(Array* array)
 	}
 }
 
-void EnterArrayByKeyboard(Array array)
-{
-	printf("\n");
-	for (int i = 0; i < array.number; i++) {
-		printf(" Item %d: ", i + 1);
-		scanf_s("%f", &array.items[i]);
-	}
-}
-
-void RandomArray(Array array)
-{
-	printf("\nThe array: \n");
-	for (int i = 0; i < array.number; i++) {
-		// (b - a) * rand() / RAND_MAX + a
-		array.items[i] = FloatRandom(-2 * array.number, 2 * array.number);
-		printf("Item %d: %.1f \n", i + 1, array.items[i]);
-	}
-}
-
-float FloatRandom(float leftBorder, float rightBorder)
-{
-	return (rightBorder - leftBorder) * rand() / RAND_MAX + leftBorder;
-}
-
-void WriteArrayToFile(Array array, FILE* file)
+void WriteArrayToFile(MyArray array, FILE* file)
 {
 	for (int i = 0; i < array.number; i++)
 		fprintf(file, "%8.1f\t", array.items[i]);
@@ -86,29 +66,27 @@ void MyTask(FILE* file, int* itemsNumber)
 	float arithmeticMean = ArithmeticMean(file);
 	float halfOfMaxPlusMin = HalfOfMaxPlusMin(file);
 
+	float max, min;
 	// предполагаем, что они не могут быть равны
 	if (arithmeticMean > halfOfMaxPlusMin) {
-		for (int i = 0; i < *itemsNumber; i++) {
-			float a = 0;
-
-			fseek(file, i * 8, SEEK_SET);
-			fscanf(file, "%f", a);
-			if (a > halfOfMaxPlusMin && a < arithmeticMean) {
-				FileLinearShift(file, i, itemsNumber);
-				i--;
-			}
-		}
+		max = arithmeticMean;
+		min = halfOfMaxPlusMin;
 	}
 	else {
-		for (int i = 0; i < *itemsNumber; i++) {
-			float a = 0;
+		max = halfOfMaxPlusMin;
+		min = arithmeticMean;
+	}
 
-			fseek(file, i * 8, SEEK_SET);
-			fscanf(file, "%f", a);
-			if (a > arithmeticMean && a < halfOfMaxPlusMin) {
-				FileLinearShift(file, i, itemsNumber);
-				i--;
-			}
+	// fwrite fread
+	
+	for (int i = 0; i < *itemsNumber; i++) {
+		float a = 0;
+
+		fseek(file, i * 8, SEEK_SET);
+		fscanf(file, "%f", a);
+		if (a > min && a < max) {
+			FileLinearShift(file, i, itemsNumber);
+			i--;
 		}
 	}
 }
