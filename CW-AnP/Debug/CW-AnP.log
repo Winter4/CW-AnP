@@ -1,50 +1,37 @@
-﻿  Geometry.cpp
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(112,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(113,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(137,87): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(139,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(140,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(182,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(183,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(184,47): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(208,99): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(209,107): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(211,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(212,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(238,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(239,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(240,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-  HandleFile.cpp
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Struct.h(6,2): warning C4091: typedef : пропускается слева от "MyArray", когда ни одна переменная не объявлена
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(30,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(30,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(86,16): warning C4477: "fscanf": в строке форматирования "%f" требуется аргумент типа "float *", но вариативный аргумент "1" имеет тип "double"
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(111,36): warning C4305: инициализация: усечение из "int" в "float"
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(128,19): warning C4244: =: преобразование "double" в "fpos_t", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(131,27): warning C4244: аргумент: преобразование "fpos_t" в "long", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(133,15): warning C4244: аргумент: преобразование "fpos_t" в "long", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(146,10): warning C4473: "printf": передано недостаточно аргументов для строки формата
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(146,10): message : заполнители и их параметры ожидают переменное число аргументов в количестве 1, но было предоставлено 0
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(146,10): message : отсутствующий вариативный аргумент "1" требуется для строки форматирования "%.1f"
+﻿  HandleFile.cpp
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(64,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(64,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(88,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(88,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(66,16): warning C4477: "fscanf": в строке форматирования "%f" требуется аргумент типа "float *", но вариативный аргумент "1" имеет тип "double"
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(91,36): warning C4305: инициализация: усечение из "int" в "float"
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(108,19): warning C4244: =: преобразование "double" в "fpos_t", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(111,27): warning C4244: аргумент: преобразование "fpos_t" в "long", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(113,15): warning C4244: аргумент: преобразование "fpos_t" в "long", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(126,10): warning C4473: "printf": передано недостаточно аргументов для строки формата
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(126,10): message : заполнители и их параметры ожидают переменное число аргументов в количестве 1, но было предоставлено 0
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\HandleFile.cpp(126,10): message : отсутствующий вариативный аргумент "1" требуется для строки форматирования "%.1f"
   Main.cpp
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Struct.h(6,2): warning C4091: typedef : пропускается слева от "MyArray", когда ни одна переменная не объявлена
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(30,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(30,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(64,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(64,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(88,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(88,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
 C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Main.cpp(12,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
   Sorting.cpp
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Struct.h(6,2): warning C4091: typedef : пропускается слева от "MyArray", когда ни одна переменная не объявлена
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(30,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(30,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Sorting.cpp(84,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Sorting.cpp(84,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(64,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(64,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(88,53): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\ArrayForming.h(88,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
   Создание кода...
 Main.obj : error LNK2005: "void __cdecl EnterArrayByKeyboard(struct MyArray)" (?EnterArrayByKeyboard@@YAXUMyArray@@@Z) уже определен в HandleFile.obj
 Main.obj : error LNK2005: "float __cdecl FloatRandom(float,float)" (?FloatRandom@@YAMMM@Z) уже определен в HandleFile.obj
+Main.obj : error LNK2005: "void __cdecl FormArray(struct MyArray *)" (?FormArray@@YAXPAUMyArray@@@Z) уже определен в HandleFile.obj
+Main.obj : error LNK2005: "void __cdecl GetArrayFromFile(struct MyArray)" (?GetArrayFromFile@@YAXUMyArray@@@Z) уже определен в HandleFile.obj
 Main.obj : error LNK2005: "void __cdecl RandomArray(struct MyArray)" (?RandomArray@@YAXUMyArray@@@Z) уже определен в HandleFile.obj
 Main.obj : error LNK2005: "struct Scale scale" (?scale@@3UScale@@A) уже определен в Geometry.obj
 Sorting.obj : error LNK2005: "void __cdecl EnterArrayByKeyboard(struct MyArray)" (?EnterArrayByKeyboard@@YAXUMyArray@@@Z) уже определен в HandleFile.obj
 Sorting.obj : error LNK2005: "float __cdecl FloatRandom(float,float)" (?FloatRandom@@YAMMM@Z) уже определен в HandleFile.obj
 Sorting.obj : error LNK2005: "void __cdecl FormArray(struct MyArray *)" (?FormArray@@YAXPAUMyArray@@@Z) уже определен в HandleFile.obj
+Sorting.obj : error LNK2005: "void __cdecl GetArrayFromFile(struct MyArray)" (?GetArrayFromFile@@YAXUMyArray@@@Z) уже определен в HandleFile.obj
 Sorting.obj : error LNK2005: "void __cdecl RandomArray(struct MyArray)" (?RandomArray@@YAXUMyArray@@@Z) уже определен в HandleFile.obj
-Sorting.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl FormArrayMini(struct MyArray *)" (?FormArrayMini@@YAXPAUMyArray@@@Z) в функции "void __cdecl Sorting(void)" (?Sorting@@YAXXZ).
-C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Debug\CW-AnP.exe : fatal error LNK1120: неразрешенных внешних элементов: 1
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Debug\CW-AnP.exe : fatal error LNK1169: обнаружен многократно определенный символ - один или более

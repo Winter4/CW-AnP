@@ -1,30 +1,30 @@
 #pragma once
 
-#include <iostream>
-#include "windows.h"
-#include "math.h"
-#include "conio.h"
-
+// основная функция
 void Geometry();
 
+// точка
 struct Dot {
 	int x; // абсциса точки
 	int y; // ордината точки
 };
 
+// окружность по центру и радиусу
 struct Circle {
 	int x; // абсциса центра
 	int y; // ордината центра
 	float r; // radius
 };
 
-struct Limits { // границы отрисовки графики
+// границы отрисовки графики
+struct Limits { 
 	int left;
 	int right;
 	int top;
 	int bot;
 };
 
+// масштаб
 struct Scale {
 	float x;
 	float y;

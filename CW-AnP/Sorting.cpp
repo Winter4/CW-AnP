@@ -1,13 +1,16 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <iostream>
+#include "conio.h"
+
 #include "Sorting.h"
 
 void Sorting()
 {
 	MyArray array = { 0 };
 
-	FormArrayMini(&array); // сформировать массив
+	FormArray(&array); // сформировать массив
 	SortArray(array); // отсортировать массив (задание по варианту)
 	printf ("\nThe array has been sorted.");
 	
@@ -33,59 +36,6 @@ void Sorting()
 	system("pause");
 
 	delete[] array.items;
-}
-
-// __________________________ Формирование массива _________________________
-
-void FormArray(MyArray* array)
-{
-	// ввод кол-ва элементов
-	printf(" Enter the number of array items: ");
-	scanf("%d", &array->number);
-	
-	array->items = new float[array->number];
-
-	printf("\nChoose the method of array forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
-	printf("\n Your choice: ");
-	int choice;
-	scanf_s("%d", &choice);
-
-	switch (choice) {
-	case 1:
-		EnterArrayByKeyboard(*array);
-		break;
-	case 2:
-		RandomArray(*array);
-		break;
-	case 3:
-		GetArrayFromFile(*array);
-	}
-}
-
-void GetArrayFromFile(MyArray array)
-{
-	FILE* file;
-	char fileName[12];
-	do {
-		printf("Enter the file name: "); // ввод имени файла
-		gets_s(fileName);
-
-		file = fopen(fileName, "r");
-	} while (file == NULL);
-
-	int i = 0;
-	while (i < array.number && !(feof(file))) { // считывание из файла
-		fscanf(file, "%f", &array.items[i]);
-		i++;
-	}
-	fclose(file);
-
-	for (i; i < array.number; i++) // дозаполнение рандомом
-		array.items[i] = FloatRandom(-2 * array.number, 2 * array.number);
-	
-	printf("\nThe array: \n"); // вывод в консоль
-	for (int i = 0; i < array.number; i++)
-		printf("Item %d: %.1f \n", i + 1, array.items[i]);
 }
 
 // _______________________ Служебные функции ___________________________

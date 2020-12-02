@@ -41,9 +41,6 @@
     <ClInclude Include="Sorting.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Struct.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="ArrayForming.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>

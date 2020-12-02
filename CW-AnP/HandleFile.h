@@ -1,13 +1,9 @@
 #pragma once
 
-#include <iostream>
 #include "ArrayForming.h"
 
 //основная функция
 void HandleFile();
-
-// сформировать массив (parent)
-void FormArray(MyArray*);
 
 // занести массив в файл
 void WriteArrayToFile(MyArray, FILE*);

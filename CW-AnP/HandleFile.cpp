@@ -1,5 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <iostream>
+
 #include "HandleFile.h"
 
 // fwrite
@@ -31,28 +33,6 @@ void HandleFile()
 
 	printf("\n");
 	system("pause");
-}
-
-void FormArray(MyArray* array)
-{
-	printf(" Enter the number of array items: ");
-	scanf("%d", &array->number);
-
-	array->items = new float[array->number];
-
-	printf("\nChoose the method of array forming \n 1 - Enter by keyboard \n 2 - Random");
-	printf("\n Your choice: ");
-	int choice;
-	scanf_s("%d", &choice);
-
-	switch (choice) {
-	case 1:
-		EnterArrayByKeyboard(*array);
-		break;
-	case 2:
-		RandomArray(*array);
-		break;
-	}
 }
 
 void WriteArrayToFile(MyArray array, FILE* file)

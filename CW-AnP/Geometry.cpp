@@ -1,6 +1,11 @@
 ﻿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <iostream>
+#include "windows.h"
+#include "math.h"
+#include "conio.h"
+
 #include "Geometry.h"
 
 #define DX 20
