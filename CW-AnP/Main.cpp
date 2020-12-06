@@ -10,9 +10,9 @@
 int main() 
 {
 	srand(time(0));
-	//Geometry();
+	Geometry();
 	//Sorting();
-	HandleFile();
+	//HandleFile();
 
 	printf("\n");
 	system("pause");

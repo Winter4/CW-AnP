@@ -8,22 +8,7 @@
 
 #include "Geometry.h"
 
-#define DX 20
-#define DY 20
 
-#define KB_RIGHT 77
-#define KB_LEFT 75
-#define KB_PLUS 43
-#define KB_MINUS 45
-#define KB_ESC 27
-
-HDC hDC;
-HWND hWnd;
-RECT Rect;
-HPEN hPen, hOldPen;
-HBRUSH hBrush, hOldBrush;
-HFONT hFont, hOldFont;
-LOGFONT Lf = { 0 };
 
 void Geometry() {
 		printf("The <Geometry> task. \n");
@@ -35,7 +20,7 @@ void Geometry() {
 
 		Dot* dots; // массив точек А
 		dots = new Dot[dotsAmount];
-		formDots(dots, dotsAmount); // формирование массива точек А
+		FormDots(dots, dotsAmount); // формирование массива точек А
 
 		// _______________________________________________________________________
 
@@ -47,12 +32,13 @@ void Geometry() {
 
 		Circle* circles; // массив окружностей B
 		circles = new Circle[circlesAmount];
-		formCircles(circles, circlesAmount); // формирование массива окружностей В (вершины)
+		FormCircles(circles, circlesAmount); // формирование массива окружностей В (вершины)
 
-		myTask(dots, circles, dotsAmount, circlesAmount); 
+		MyTask(dots, circles, dotsAmount, circlesAmount); 
 
 		// __________________________________ Графика _____________________________
 
+	/*
 	hWnd = GetConsoleWindow();
 	MoveWindow(hWnd, 50, 20, 1500, 800, NULL);
 
@@ -71,18 +57,17 @@ void Geometry() {
 
 	GetClientRect(hWnd, &Rect);
 
-
-
 	ReleaseDC(hWnd, hDC);
 	return;
 
 	delete[] dots;
 	delete[] circles;
+	*/
 }
 
 // __________________ Обработка точек ______________________
 
-void formDots(Dot* dots, int dotsAmount)
+void FormDots(Dot* dots, int dotsAmount)
 {
 	printf("\nChoose the method of dots forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
 	printf("\n Your choice: ");
@@ -91,17 +76,18 @@ void formDots(Dot* dots, int dotsAmount)
 
 	switch (choice) {
 	case 1:
-		enterDotsByKeyboard(dots, dotsAmount);
+		EnterDotsByKeyboard(dots, dotsAmount);
 		break;
 	case 2:
-		randomDots(dots, dotsAmount);
+		RandomDots(dots, dotsAmount);
 		break;
 	case 3:
-		getDotsFromFile(dots, dotsAmount);
+		GetDotsFromFile(dots, dotsAmount);
+		break;
 	}
 }
 
-void enterDotsByKeyboard(Dot* dots, int dotsAmount)
+void EnterDotsByKeyboard(Dot* dots, int dotsAmount)
 {
 	printf("\n");
 	for (int i = 0; i < dotsAmount; i++) {
@@ -110,7 +96,7 @@ void enterDotsByKeyboard(Dot* dots, int dotsAmount)
 	}
 }
 
-void randomDots(Dot* dots, int dotsAmount)
+void RandomDots(Dot* dots, int dotsAmount)
 {
 	printf("\nDots:");
 	for (int i = 0; i < dotsAmount; i++) {
@@ -120,7 +106,7 @@ void randomDots(Dot* dots, int dotsAmount)
 	}
 }
 
-void getDotsFromFile(Dot* dots, int dotsAmount)
+void GetDotsFromFile(Dot* dots, int dotsAmount)
 {
 	FILE* file;
 	char fileName[12];
@@ -152,7 +138,7 @@ void getDotsFromFile(Dot* dots, int dotsAmount)
 
 // ______________________ Обработка окружностей ___________________________
 
-void formCircles(Circle* circles, int circlesAmount)
+void FormCircles(Circle* circles, int circlesAmount)
 {
 	printf("\nChoose the method of circles forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
 	printf("\n Your choice: ");
@@ -161,17 +147,18 @@ void formCircles(Circle* circles, int circlesAmount)
 
 	switch (choice) {
 	case 1:
-		enterCirclesByKeyboard(circles, circlesAmount);
+		EnterCirclesByKeyboard(circles, circlesAmount);
 		break;
 	case 2:
-		randomCircles(circles, circlesAmount);
+		RandomCircles(circles, circlesAmount);
 		break;
 	case 3:
-		getCirclesFromFile(circles, circlesAmount);
+		GetCirclesFromFile(circles, circlesAmount);
+		break;
 	}
 }
 
-void enterCirclesByKeyboard(Circle* circles, int circlesAmount)
+void EnterCirclesByKeyboard(Circle* circles, int circlesAmount)
 {
 	printf("\n");
 	for (int i = 0; i < circlesAmount; i++) {
@@ -180,7 +167,7 @@ void enterCirclesByKeyboard(Circle* circles, int circlesAmount)
 	}
 }
 
-void randomCircles(Circle* circles, int circlesAmount)
+void RandomCircles(Circle* circles, int circlesAmount)
 {
 	printf("\nCircles:");
 	for (int i = 0; i < circlesAmount; i++) {
@@ -191,7 +178,7 @@ void randomCircles(Circle* circles, int circlesAmount)
 	}
 }
 
-void getCirclesFromFile(Circle* circles, int circlesAmount)
+void GetCirclesFromFile(Circle* circles, int circlesAmount)
 {
 	FILE* file;
 	char fileName[12];
@@ -224,17 +211,17 @@ void getCirclesFromFile(Circle* circles, int circlesAmount)
 
 // ______________________ Задание по варианту ___________________________
 
-void myTask(Dot* dots, Circle* circles, int dotsAmount, int circlesAmount)
+void MyTask(Dot* dots, Circle* circles, int dotsAmount, int circlesAmount)
 {
 	int minCrossedCircles = INT_MAX; // значение пересеченных окружностей для ответа
 	
-	
-	struct Line { // структура прямой с двумя точками, через которые проходит эта прямая, и которая будет в ответе
+	// структура прямой, проходящая через 2 точки, и которая будет в ответе
+	struct Line { 		
 		int x1;
 		int y1;
 		int x2;
 		int y2;
-	} line = { 0, 0, 0, 0 }; // прямая, проходящая через 2 точки
+	} line = { 0, 0, 0, 0 };
 
 	for (int i = 0; i < dotsAmount; i++) // перебор прямых (т. 1)
 		for (int j = i + 1; j < dotsAmount; j++) { // перебор прямых (т. 2)

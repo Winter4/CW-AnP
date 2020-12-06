@@ -4,6 +4,10 @@
 
 //основная функция
 void HandleFile();
+void HandleFile();
+void HandleFile();
+void HandleFile();
+void HandleFile();
 
 // занести массив в файл
 void WriteArrayToFile(MyArray, FILE*);

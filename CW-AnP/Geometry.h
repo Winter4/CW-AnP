@@ -3,6 +3,8 @@
 // основная функция
 void Geometry();
 
+// ______________________ Геометрия _______________________
+
 // точка
 struct Dot {
 	int x; // абсциса точки
@@ -16,42 +18,62 @@ struct Circle {
 	float r; // radius
 };
 
+// масштаб
+struct Scale {
+	float x;
+	float y;
+};
+
+// сформировать массив точек 
+void FormDots(Dot*, int);
+// сформировать массив окружностей
+void FormCircles(Circle*, int);
+
+// ввести масив точек с клавиатуры (множество А) 
+void EnterDotsByKeyboard(Dot*, int); 
+// случайно сгенерировать массив точек(множество А)
+void RandomDots(Dot*, int); 
+// взять точки из файла и зарандомить недостающие (множество А)
+void GetDotsFromFile(Dot*, int);
+
+// ввести массив окружностей с клавиатуры (мн. B)
+void EnterCirclesByKeyboard(Circle*, int);
+// зарандомить окружности (мн. B)
+void RandomCircles(Circle*, int);
+// взять окружности из файла (мн. B)
+void GetCirclesFromFile(Circle*, int);
+
+void MyTask(Dot*, Circle*, int, int);
+
+// __________________________ Графика _____________________________
+
 // границы отрисовки графики
-struct Limits { 
+struct DrawArea {
 	int left;
 	int right;
 	int top;
 	int bot;
 };
 
-// масштаб
-struct Scale {
-	float x;
-	float y;
-} scale;
+#define DX 20
+#define DY 20
 
-// сформировать массив точек 
-void formDots(Dot*, int);
-// сформировать массив окружностей
-void formCircles(Circle*, int);
+#define KB_RIGHT 77
+#define KB_LEFT 75
+#define KB_PLUS 43
+#define KB_MINUS 45
+#define KB_ESC 27
 
-// ввести масив точек с клавиатуры (множество А) 
-void enterDotsByKeyboard(Dot*, int); 
-// случайно сгенерировать массив точек(множество А)
-void randomDots(Dot*, int); 
-// взять точки из файла и зарандомить недостающие (множество А)
-void getDotsFromFile(Dot*, int);
+/*
+HDC hDC;
+HWND hWnd;
+RECT Rect;
+HPEN hPen, hOldPen;
+HBRUSH hBrush, hOldBrush;
+HFONT hFont, hOldFont;
+LOGFONT Lf = { 0 };
+*/
 
-// ввести массив окружностей с клавиатуры (мн. B)
-void enterCirclesByKeyboard(Circle*, int);
-// зарандомить окружности (мн. B)
-void randomCircles(Circle*, int);
-// взять окружности из файла (мн. B)
-void getCirclesFromFile(Circle*, int);
-
-void myTask(Dot*, Circle*, int, int);
-
-// __________________________ Графика _____________________________
 /*
 //void dot(HDC hDC, int x, int y, COLORREF Color);
 void clearscreen(int red, int green, int blue);

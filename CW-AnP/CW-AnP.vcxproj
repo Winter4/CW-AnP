@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArrayForming.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="HandleFile.cpp" />
     <ClCompile Include="Main.cpp" />

@@ -30,6 +30,9 @@
     <ClCompile Include="Sorting.cpp">
       <Filter>Исходные файлы\Tasks</Filter>
     </ClCompile>
+    <ClCompile Include="ArrayForming.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandleFile.h">
