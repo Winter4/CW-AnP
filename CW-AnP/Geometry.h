@@ -1,4 +1,8 @@
 #pragma once
+#include <iostream>
+#include "windows.h"
+#include "math.h"
+#include "conio.h"
 
 // основная функция
 void Geometry();
@@ -47,12 +51,14 @@ void MyTask(Dot*, Circle*, int, int);
 
 // __________________________ Графика _____________________________
 
-// границы отрисовки графики
-struct DrawArea {
-	int left;
-	int right;
-	int top;
-	int bot;
+#include "winuser.h"
+
+struct Borders {
+	float x_min;
+	float x_max;
+
+	float y_min;
+	float y_max;
 };
 
 #define DX 20
@@ -62,17 +68,20 @@ struct DrawArea {
 #define KB_LEFT 75
 #define KB_PLUS 43
 #define KB_MINUS 45
+#define KB_HOME 36
 #define KB_ESC 27
 
-/*
-HDC hDC;
-HWND hWnd;
-RECT Rect;
-HPEN hPen, hOldPen;
-HBRUSH hBrush, hOldBrush;
-HFONT hFont, hOldFont;
-LOGFONT Lf = { 0 };
-*/
+// отрисовать график
+void Draw(Borders);
+// нарисовать сетку
+void MakeGrid();
+
+// вычислить границы отрисовки
+Borders CalcGraphBorders(Dot*, int, Circle*, int);
+// 
+
+
+
 
 /*
 //void dot(HDC hDC, int x, int y, COLORREF Color);

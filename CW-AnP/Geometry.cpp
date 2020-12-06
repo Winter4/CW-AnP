@@ -1,73 +1,117 @@
 ﻿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <iostream>
-#include "windows.h"
-#include "math.h"
-#include "conio.h"
-
 #include "Geometry.h"
 
+HWND wnd;
+HDC dc;
 
+RECT windowSize; // размеры окна
+	
 
-void Geometry() {
-		printf("The <Geometry> task. \n");
-		printf(" Please enter the amount of dots (A plenty): "); // ввод количества точек А
-		int dotsAmount; // кол-во точек А
-		do {
-			scanf_s("%d", &dotsAmount);
-		} while (dotsAmount < 2);
+HBRUSH backgroundBrush;
 
-		Dot* dots; // массив точек А
-		dots = new Dot[dotsAmount];
-		FormDots(dots, dotsAmount); // формирование массива точек А
+void Geometry() 
+{
+	
+	printf("The <Geometry> task. \n");
+	printf(" Please enter the amount of dots (A plenty): "); // ввод количества точек А
+	int dotsNumber; // кол-во точек А
+	do {
+		scanf_s("%d", &dotsNumber);
+	} while (dotsNumber < 2);
 
-		// _______________________________________________________________________
+	Dot* dots; // массив точек А
+	dots = new Dot[dotsNumber];
+	FormDots(dots, dotsNumber); // формирование массива точек А
 
-		printf("\n\n Please enter the amount of circles: "); // ввод количества окружностей В
-		int circlesAmount; // кол-во окружностей В
-		do {
-			scanf_s("%d", &circlesAmount);
-		} while (circlesAmount < 1);
+	// _______________________________________________________________________
 
-		Circle* circles; // массив окружностей B
-		circles = new Circle[circlesAmount];
-		FormCircles(circles, circlesAmount); // формирование массива окружностей В (вершины)
+	printf("\n\n Please enter the amount of circles: "); // ввод количества окружностей В
+	int circlesNumber; // кол-во окружностей В
+	do {
+		scanf_s("%d", &circlesNumber);
+	} while (circlesNumber < 1);
 
-		MyTask(dots, circles, dotsAmount, circlesAmount); 
+	Circle* circles; // массив окружностей B
+	circles = new Circle[circlesNumber];
+	FormCircles(circles, circlesNumber); // формирование массива окружностей В (вершины)
 
-		// __________________________________ Графика _____________________________
+	MyTask(dots, circles, dotsNumber, circlesNumber); 
+	
+	// __________________________________ Графика _____________________________
 
-	/*
-	hWnd = GetConsoleWindow();
-	MoveWindow(hWnd, 50, 20, 1500, 800, NULL);
+	wnd = GetConsoleWindow(); // получаем окно
+	MoveWindow(wnd, 50, 20, 1500, 800, NULL); // двигаем окно на экране
 
-	if (!hWnd) {
+	// страж 
+	if (!wnd) { 
 		printf("Can't get hWnd of console!\n");
 		system("pause");
 		return;
 	}
 
-	hDC = GetDC(hWnd);
-	if (!hDC) {
+	dc = GetDC(wnd); // получаем дескриптор окна
+	// страж
+	if (!dc) {
 		printf("Can't get device context!\n");
 		system("pause");
 		return;
 	}
+	
+	// получаем размеры окна
+	GetClientRect(wnd, &windowSize);
 
-	GetClientRect(hWnd, &Rect);
+	Borders 
+		graphBorders = CalcGraphBorders(dots, dotsNumber, circles, circlesNumber), // границы графика
+		drawBorders = graphBorders; // границы отрисовки
+	
+	backgroundBrush = CreateSolidBrush(RGB(255, 255, 255));
+	int key;
+	do {
+		Draw(graphBorders);
+		key = _getch();
 
-	ReleaseDC(hWnd, hDC);
+		switch (key) {
+		case KB_RIGHT:
+			drawBorders.x_min += DX;
+			drawBorders.x_max += DX;
+			break;
+
+		case KB_LEFT:
+			drawBorders.x_min -= DX;
+			drawBorders.x_max -= DX;
+			break;
+
+		case KB_PLUS:
+			if (drawBorders.x_min + DX != drawBorders.x_max - DX) {
+				drawBorders.x_min += DX;
+				drawBorders.x_max -= DX;
+			}
+			break;
+
+		case KB_MINUS: 
+			drawBorders.x_min -= DX;
+			drawBorders.x_max += DX;
+			break;
+
+		case KB_HOME:
+			drawBorders = graphBorders;
+			break;
+		}
+	} while (key != KB_ESC);
+
+	ReleaseDC(wnd, dc);
 	return;
 
-	delete[] dots;
-	delete[] circles;
-	*/
+//	delete[] dots;
+//	delete[] circles;
+	
 }
 
 // __________________ Обработка точек ______________________
 
-void FormDots(Dot* dots, int dotsAmount)
+void FormDots(Dot* dots, int dotsNumber)
 {
 	printf("\nChoose the method of dots forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
 	printf("\n Your choice: ");
@@ -76,37 +120,37 @@ void FormDots(Dot* dots, int dotsAmount)
 
 	switch (choice) {
 	case 1:
-		EnterDotsByKeyboard(dots, dotsAmount);
+		EnterDotsByKeyboard(dots, dotsNumber);
 		break;
 	case 2:
-		RandomDots(dots, dotsAmount);
+		RandomDots(dots, dotsNumber);
 		break;
 	case 3:
-		GetDotsFromFile(dots, dotsAmount);
+		GetDotsFromFile(dots, dotsNumber);
 		break;
 	}
 }
 
-void EnterDotsByKeyboard(Dot* dots, int dotsAmount)
+void EnterDotsByKeyboard(Dot* dots, int dotsNumber)
 {
 	printf("\n");
-	for (int i = 0; i < dotsAmount; i++) {
+	for (int i = 0; i < dotsNumber; i++) {
 		printf(" Dot %d: ", i + 1);
 		scanf_s("%d%d", &dots[i].x, &dots[i].y);
 	}
 }
 
-void RandomDots(Dot* dots, int dotsAmount)
+void RandomDots(Dot* dots, int dotsNumber)
 {
 	printf("\nDots:");
-	for (int i = 0; i < dotsAmount; i++) {
-		dots[i].x = -2.0 * dotsAmount + 2.0 * dotsAmount * rand() / RAND_MAX;
-		dots[i].y = -2.0 * dotsAmount + 2.0 * dotsAmount * rand() / RAND_MAX;
+	for (int i = 0; i < dotsNumber; i++) {
+		dots[i].x = -2.0 * dotsNumber + 2.0 * dotsNumber * rand() / RAND_MAX;
+		dots[i].y = -2.0 * dotsNumber + 2.0 * dotsNumber * rand() / RAND_MAX;
 		printf("\nDot %d: %d %d", i + 1, dots[i].x, dots[i].y);
 	}
 }
 
-void GetDotsFromFile(Dot* dots, int dotsAmount)
+void GetDotsFromFile(Dot* dots, int dotsNumber)
 {
 	FILE* file;
 	char fileName[12];
@@ -118,27 +162,27 @@ void GetDotsFromFile(Dot* dots, int dotsAmount)
 	} while (file == NULL);
 
 	int i = 0;
-	while (i < dotsAmount && !(feof(file))) { // считывание из файла
+	while (i < dotsNumber && !(feof(file))) { // считывание из файла
 		fscanf(file, "%d%d", &dots[i].x, &dots[i].y);
 		i++;
 	}
 	fclose(file);
 
 	// проверка на непарное число в файле
-	if (dots[i - 1].y < -2000 || dots[i - 1].y > 2000) dots[i - 1].y = -2.0 * dotsAmount + 2.0 * dotsAmount * rand() / RAND_MAX; 
-	for (i; i < dotsAmount; i++) { // дозаполнение рандомом
-		dots[i].x = -2.0 * dotsAmount + 2.0 * dotsAmount * rand() / RAND_MAX;
-		dots[i].y = -2.0 * dotsAmount + 2.0 * dotsAmount * rand() / RAND_MAX;
+	if (dots[i - 1].y < -2000 || dots[i - 1].y > 2000) dots[i - 1].y = -2.0 * dotsNumber + 2.0 * dotsNumber * rand() / RAND_MAX;
+	for (i; i < dotsNumber; i++) { // дозаполнение рандомом
+		dots[i].x = -2.0 * dotsNumber + 2.0 * dotsNumber * rand() / RAND_MAX;
+		dots[i].y = -2.0 * dotsNumber + 2.0 * dotsNumber * rand() / RAND_MAX;
 	}
 
 	printf("\nThe plenty of dots: \n"); // вывод в консоль
-	for (int i = 0; i < dotsAmount; i++)
+	for (int i = 0; i < dotsNumber; i++)
 		printf("\nDot %d: %d %d", i + 1, dots[i].x, dots[i].y);
 }
 
 // ______________________ Обработка окружностей ___________________________
 
-void FormCircles(Circle* circles, int circlesAmount)
+void FormCircles(Circle* circles, int circlesNumber)
 {
 	printf("\nChoose the method of circles forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
 	printf("\n Your choice: ");
@@ -147,38 +191,38 @@ void FormCircles(Circle* circles, int circlesAmount)
 
 	switch (choice) {
 	case 1:
-		EnterCirclesByKeyboard(circles, circlesAmount);
+		EnterCirclesByKeyboard(circles, circlesNumber);
 		break;
 	case 2:
-		RandomCircles(circles, circlesAmount);
+		RandomCircles(circles, circlesNumber);
 		break;
 	case 3:
-		GetCirclesFromFile(circles, circlesAmount);
+		GetCirclesFromFile(circles, circlesNumber);
 		break;
 	}
 }
 
-void EnterCirclesByKeyboard(Circle* circles, int circlesAmount)
+void EnterCirclesByKeyboard(Circle* circles, int circlesNumber)
 {
 	printf("\n");
-	for (int i = 0; i < circlesAmount; i++) {
+	for (int i = 0; i < circlesNumber; i++) {
 		printf(" Circle %d (x y r): ", i + 1);
 		scanf_s("%d%d%f", &circles[i].x, &circles[i].y, &circles[i].r);
 	}
 }
 
-void RandomCircles(Circle* circles, int circlesAmount)
+void RandomCircles(Circle* circles, int circlesNumber)
 {
 	printf("\nCircles:");
-	for (int i = 0; i < circlesAmount; i++) {
-		circles[i].x = -2.0 * circlesAmount + 2.0 * circlesAmount * rand() / RAND_MAX;
-		circles[i].y = -2.0 * circlesAmount + 2.0 * circlesAmount * rand() / RAND_MAX;
-		circles[i].r = 2.0 * circlesAmount * rand() / RAND_MAX;
+	for (int i = 0; i < circlesNumber; i++) {
+		circles[i].x = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+		circles[i].y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+		circles[i].r = 2.0 * circlesNumber * rand() / RAND_MAX;
 		printf("\nCircle %d: %d %d %.1f", i + 1, circles[i].x, circles[i].y, circles[i].r);
 	}
 }
 
-void GetCirclesFromFile(Circle* circles, int circlesAmount)
+void GetCirclesFromFile(Circle* circles, int circlesNumber)
 {
 	FILE* file;
 	char fileName[12];
@@ -190,28 +234,28 @@ void GetCirclesFromFile(Circle* circles, int circlesAmount)
 	} while (file == NULL);
 
 	int i = 0;
-	while (i < circlesAmount && !(feof(file))) { // считывание из файла
+	while (i < circlesNumber && !(feof(file))) { // считывание из файла
 		fscanf(file, "%d%d%f", &circles[i].x, &circles[i].y, &circles[i].r);
 		i++;
 	}
 	fclose(file);
 
 	// проверка на непарное число в файле
-	if (circles[i - 1].y < -2000 || circles[i - 1].y > 2000) circles[i - 1].y = -2.0 * circlesAmount + 2.0 * circlesAmount * rand() / RAND_MAX;
-	if (circles[i - 1].r < -2000 || circles[i - 1].r > 2000) circles[i - 1].r = 2.0 * circlesAmount * rand() / RAND_MAX;
-	for (i; i < circlesAmount; i++) { // дозаполнение рандомом
-		circles[i].x = -2.0 * circlesAmount + 2.0 * circlesAmount * rand() / RAND_MAX;
-		circles[i].y = -2.0 * circlesAmount + 2.0 * circlesAmount * rand() / RAND_MAX;
+	if (circles[i - 1].y < -2000 || circles[i - 1].y > 2000) circles[i - 1].y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+	if (circles[i - 1].r < -2000 || circles[i - 1].r > 2000) circles[i - 1].r = 2.0 * circlesNumber * rand() / RAND_MAX;
+	for (i; i < circlesNumber; i++) { // дозаполнение рандомом
+		circles[i].x = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+		circles[i].y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
 	}
 
 	printf("\nThe plenty of circles: \n"); // вывод в консоль
-	for (int i = 0; i < circlesAmount; i++)
+	for (int i = 0; i < circlesNumber; i++)
 		printf("Circle %d: %d %d   %.1f \n", i + 1, circles[i].x, circles[i].y, circles[i].r);
 }
 
 // ______________________ Задание по варианту ___________________________
 
-void MyTask(Dot* dots, Circle* circles, int dotsAmount, int circlesAmount)
+void MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber)
 {
 	int minCrossedCircles = INT_MAX; // значение пересеченных окружностей для ответа
 	
@@ -223,8 +267,8 @@ void MyTask(Dot* dots, Circle* circles, int dotsAmount, int circlesAmount)
 		int y2;
 	} line = { 0, 0, 0, 0 };
 
-	for (int i = 0; i < dotsAmount; i++) // перебор прямых (т. 1)
-		for (int j = i + 1; j < dotsAmount; j++) { // перебор прямых (т. 2)
+	for (int i = 0; i < dotsNumber; i++) // перебор прямых (т. 1)
+		for (int j = i + 1; j < dotsNumber; j++) { // перебор прямых (т. 2)
 
 			float // A, B, C - коф-ты уравнения прямой
 				A = dots[j].y - dots[i].y,
@@ -232,7 +276,7 @@ void MyTask(Dot* dots, Circle* circles, int dotsAmount, int circlesAmount)
 				C = dots[i].y * dots[j].x - dots[j].y * dots[i].x;
 			int crossedCircles = 0; // счетчик пересеченных окружностей
 
-			for (int k = 0; k < circlesAmount; k++) { // перебор окружностей
+			for (int k = 0; k < circlesNumber; k++) { // перебор окружностей
 				float distance = fabs(A * circles[k].x + B * circles[k].y + C) / sqrt(A * A + B * B);
 				if (distance < circles[k].r)
 					crossedCircles++;
@@ -250,11 +294,50 @@ void MyTask(Dot* dots, Circle* circles, int dotsAmount, int circlesAmount)
 
 	printf("\n\nThe line which crosses the less circles passes dots: (%d; %d) and (%d; %d) \n", line.x1, line.y1, line.x2, line.y2);
 	printf("Crossed circles: %d", minCrossedCircles);
+}
+
+// _______________________________ Графика _______________________________________
+
+void Draw(Borders drawBorders)
+{
+	system("cls");
+	SelectObject(dc, backgroundBrush);
+	Rectangle(dc, windowSize.left, windowSize.top, windowSize.right, windowSize.bottom);
 
 
 }
 
-// _______________________________ Графика _______________________________________
+void MakeGrid()
+{
+	HPEN gridPen = CreatePen(PS_DASH, 2, RGB(169, 169, 169));
+}
+
+Borders CalcGraphBorders(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber)
+{
+	Borders example;
+	example.x_max = example.y_max = INT_MIN;
+	example.x_min = example.y_min = INT_MAX;
+
+	for (int i = 0; i < dotsNumber; i++) {
+		if (dots[i].x < example.x_min) example.x_min = dots[i].x;
+		if (dots[i].x > example.x_max) example.x_max = dots[i].x;
+
+		if (dots[i].y > example.y_max) example.y_max = dots[i].y;
+		if (dots[i].y < example.y_min) example.y_min = dots[i].y;
+	}
+
+	for (int i = 0; i < circlesNumber; i++) {
+		if (circles[i].x - circles[i].r < example.x_min) example.x_min = circles[i].x - circles[i].r;
+		if (circles[i].x + circles[i].r > example.x_max) example.x_max = circles[i].x + circles[i].r;
+
+		if (circles[i].y - circles[i].r < example.y_min) example.y_min = circles[i].x - circles[i].r;
+		if (circles[i].y + circles[i].r > example.y_max) example.y_max = circles[i].x + circles[i].r;
+	}
+
+	return example;
+}
+
+
 /*
 void clearscreen(int red, int green, int blue)
 {

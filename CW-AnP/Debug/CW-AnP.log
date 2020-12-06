@@ -1,20 +1,22 @@
 ﻿  Geometry.cpp
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(103,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(104,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(128,87): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(130,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(131,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(174,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(175,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(176,47): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(200,99): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(201,107): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(203,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(204,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(230,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(231,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(232,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-  Main.cpp
-C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Main.cpp(12,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-  Создание кода...
-  CW-AnP.vcxproj -> C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Debug\CW-AnP.exe
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(147,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(148,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(172,87): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(174,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(175,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(218,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(219,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(220,47): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(244,99): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(245,107): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(247,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(248,39): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(274,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(275,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(276,7): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(305,41): warning C4305: =: усечение из "int" в "float"
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(308,57): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(309,57): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(311,57): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Geometry.cpp(312,57): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  CW-AnP.vcxproj -> C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Debug\CW-AnP.exe
