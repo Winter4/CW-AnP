@@ -22,10 +22,12 @@ struct Circle {
 	float r; // radius
 };
 
-// масштаб
-struct Scale {
-	float x;
-	float y;
+// прямая, проходящая через 2 точки
+struct Line {
+	int x1;
+	int y1;
+	int x2;
+	int y2;
 };
 
 // сформировать массив точек 
@@ -47,12 +49,13 @@ void RandomCircles(Circle*, int);
 // взять окружности из файла (мн. B)
 void GetCirclesFromFile(Circle*, int);
 
-void MyTask(Dot*, Circle*, int, int);
+Line MyTask(Dot*, Circle*, int, int, Line**);
 
 // __________________________ Графика _____________________________
 
 #include "winuser.h"
 
+// границы
 struct Borders {
 	float x_min;
 	float x_max;
@@ -61,8 +64,14 @@ struct Borders {
 	float y_max;
 };
 
-#define DX 20
-#define DY 20
+// масштаб
+struct Scale {
+	float x;
+	float y;
+};
+
+#define DELTA 25
+#define EDGE_HALF DELTA * 10 // половина оси сетки
 
 #define KB_RIGHT 77
 #define KB_LEFT 75
@@ -72,13 +81,21 @@ struct Borders {
 #define KB_ESC 27
 
 // отрисовать график
-void Draw(Borders);
+void Draw(Borders, Dot, Dot*, int, Circle*,
+	int, Line*, int);
 // нарисовать сетку
-void MakeGrid();
+void MakeGrid(Dot);
+// нарисовать оси
+void MakeAxis(Dot);
+// вычислить масштаб
+Scale CalcScale(RECT, Borders);
+// нарисовать элементы
+void MakeElements(Dot*, int, Circle*, int, Borders, Line*, int);
 
 // вычислить границы отрисовки
 Borders CalcGraphBorders(Dot*, int, Circle*, int);
-// 
+// нарисовать пиксель
+void SetPixel(Dot, Scale);
 
 
 

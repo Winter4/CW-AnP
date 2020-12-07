@@ -37,16 +37,19 @@ void Geometry()
 	circles = new Circle[circlesNumber];
 	FormCircles(circles, circlesNumber); // формирование массива окружностей В (вершины)
 
-	MyTask(dots, circles, dotsNumber, circlesNumber); 
+	// количество прямых, которые можно провести через n точек
+	int linesNumber = dotsNumber * (dotsNumber - 1) / 2;
+	Line* lines = new Line[linesNumber];
+	Line chosenLine = MyTask(dots, circles, dotsNumber, circlesNumber, &lines); 
 	
 	// __________________________________ Графика _____________________________
 
 	wnd = GetConsoleWindow(); // получаем окно
-	MoveWindow(wnd, 50, 20, 1500, 800, NULL); // двигаем окно на экране
+	MoveWindow(wnd, 50, 20, 1366, 768, NULL); // двигаем окно на экране
 
 	// страж 
 	if (!wnd) { 
-		printf("Can't get hWnd of console!\n");
+		printf("Can't get window of console!\n");
 		system("pause");
 		return;
 	}
@@ -62,51 +65,22 @@ void Geometry()
 	// получаем размеры окна
 	GetClientRect(wnd, &windowSize);
 
-	Borders 
-		graphBorders = CalcGraphBorders(dots, dotsNumber, circles, circlesNumber), // границы графика
-		drawBorders = graphBorders; // границы отрисовки
+	Dot windowCenter;
+	windowCenter.x = (windowSize.right - windowSize.left) / 2;
+	windowCenter.y = (windowSize.bottom - windowSize.top) / 2;
+	
+	Borders drawBorders = CalcGraphBorders(dots, dotsNumber, circles, circlesNumber); // границы графика
+	Scale scale = CalcScale(windowSize, drawBorders);
 	
 	backgroundBrush = CreateSolidBrush(RGB(255, 255, 255));
-	int key;
-	do {
-		Draw(graphBorders);
-		key = _getch();
-
-		switch (key) {
-		case KB_RIGHT:
-			drawBorders.x_min += DX;
-			drawBorders.x_max += DX;
-			break;
-
-		case KB_LEFT:
-			drawBorders.x_min -= DX;
-			drawBorders.x_max -= DX;
-			break;
-
-		case KB_PLUS:
-			if (drawBorders.x_min + DX != drawBorders.x_max - DX) {
-				drawBorders.x_min += DX;
-				drawBorders.x_max -= DX;
-			}
-			break;
-
-		case KB_MINUS: 
-			drawBorders.x_min -= DX;
-			drawBorders.x_max += DX;
-			break;
-
-		case KB_HOME:
-			drawBorders = graphBorders;
-			break;
-		}
-	} while (key != KB_ESC);
+	Draw(drawBorders, windowCenter, dots, dotsNumber, circles, circlesNumber, lines, linesNumber);
 
 	ReleaseDC(wnd, dc);
-	return;
 
-//	delete[] dots;
-//	delete[] circles;
-	
+	delete dots;
+	delete circles;
+	delete lines;
+	_getch();
 }
 
 // __________________ Обработка точек ______________________
@@ -255,18 +229,12 @@ void GetCirclesFromFile(Circle* circles, int circlesNumber)
 
 // ______________________ Задание по варианту ___________________________
 
-void MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber)
+Line MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber, Line** lines)
 {
 	int minCrossedCircles = INT_MAX; // значение пересеченных окружностей для ответа
-	
-	// структура прямой, проходящая через 2 точки, и которая будет в ответе
-	struct Line { 		
-		int x1;
-		int y1;
-		int x2;
-		int y2;
-	} line = { 0, 0, 0, 0 };
 
+	Line chosenLine = { 0 };
+	int linesCount = 0;
 	for (int i = 0; i < dotsNumber; i++) // перебор прямых (т. 1)
 		for (int j = i + 1; j < dotsNumber; j++) { // перебор прямых (т. 2)
 
@@ -285,31 +253,90 @@ void MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber)
 			if (crossedCircles < minCrossedCircles) {
 				minCrossedCircles = crossedCircles; // сохраняем значение пер-ных окружностей
 
-				line.x1 = dots[i].x; // сохраняем две точки, через которые проходит прямая
-				line.y1 = dots[i].y;
-				line.x2 = dots[j].x;
-				line.y2 = dots[j].y;
+				// сохраняем две точки, через которые проходит прямая
+				chosenLine = { dots[i].x, dots[i].y, dots[j].x, dots[j].y };
 			}
+
+			*lines[linesCount] = { dots[i].x, dots[i].y, dots[j].x, dots[j].y };
+			linesCount++;
 		}
 
-	printf("\n\nThe line which crosses the less circles passes dots: (%d; %d) and (%d; %d) \n", line.x1, line.y1, line.x2, line.y2);
+	printf("\n\nThe line which crosses the less circles passes dots: (%d; %d) and (%d; %d) \n", 
+		chosenLine.x1, chosenLine.y1, chosenLine.x2, chosenLine.y2);
 	printf("Crossed circles: %d", minCrossedCircles);
+
+	return chosenLine;
 }
 
 // _______________________________ Графика _______________________________________
 
-void Draw(Borders drawBorders)
+void Draw(Borders drawBorders, Dot windowCenter, Dot* dots, int dotsNumber, Circle* circles,
+	int circlesNumber, Line* lines, int linesNumber)
 {
 	system("cls");
 	SelectObject(dc, backgroundBrush);
 	Rectangle(dc, windowSize.left, windowSize.top, windowSize.right, windowSize.bottom);
+	MakeGrid(windowCenter);
+	MakeAxis(windowCenter);
+	MakeElements(dots, dotsNumber, circles, circlesNumber, drawBorders, lines, linesNumber);
+}
+
+void MakeGrid(Dot windowCenter)
+{
+	HPEN gridPen = CreatePen(PS_DOT, 2, RGB(169, 169, 169));
+	SelectObject(dc, gridPen);
+
+	for (int i = -10; i <= 10; i++) {
+		// горизонтальные линии
+		MoveToEx(dc, windowCenter.x - DELTA * 10, windowCenter.y + DELTA * i, 0);
+		LineTo(dc, windowCenter.x + DELTA * 10, windowCenter.y + DELTA * i);
+
+		// вертикальные линии
+		MoveToEx(dc, windowCenter.x + DELTA * i, windowCenter.y - DELTA * 10, 0);
+		LineTo(dc, windowCenter.x + DELTA * i, windowCenter.y + DELTA * 10);
+	}
+}
+
+void MakeAxis(Dot windowCenter)
+{
+	HPEN axisPen = CreatePen(PS_SOLID, 2, RGB(70, 70, 70));
+	SelectObject(dc, axisPen);
+
+	// ось X
+	MoveToEx(dc, windowCenter.x, windowCenter.y - EDGE_HALF, 0);
+	LineTo(dc, windowCenter.x, windowCenter.y + EDGE_HALF);
+
+	// ось Y
+	MoveToEx(dc, windowCenter.x - EDGE_HALF, windowCenter.y, 0);
+	LineTo(dc, windowCenter.x + EDGE_HALF, windowCenter.y);
 
 
 }
 
-void MakeGrid()
+Scale CalcScale(RECT windowSize, Borders drawBorders)
 {
-	HPEN gridPen = CreatePen(PS_DASH, 2, RGB(169, 169, 169));
+	Scale scale = { 0 };
+	scale.x = windowSize.right / (drawBorders.x_max - drawBorders.x_min);
+	scale.y = windowSize.bottom / (drawBorders.y_max - drawBorders.y_min);
+
+	return scale;
+}
+
+void MakeElements(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Borders drawBorders, Line* lines, int linesNumber)
+{
+	HPEN linePen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+	SelectObject(dc, linePen);
+	Scale scale = CalcScale(windowSize, drawBorders);
+	for (int i = 0; i < linesNumber; i++) {
+		float y = (drawBorders.x_min - lines[i].x1) / (lines[i].y2 - lines[i].y1) * 
+			(lines[i].x2 - lines[i].x1) + lines[i].y1;
+		MoveToEx(dc, drawBorders.x_min * scale.x, y * scale.y, 0);
+		y = (drawBorders.x_max - lines[i].x1) / (lines[i].y2 - lines[i].y1) *
+			(lines[i].x2 - lines[i].x1) + lines[i].y1;
+		LineTo(dc, drawBorders.x_max * scale.x, y);
+	}
+	
+
 }
 
 Borders CalcGraphBorders(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber)
@@ -335,6 +362,11 @@ Borders CalcGraphBorders(Dot* dots, int dotsNumber, Circle* circles, int circles
 	}
 
 	return example;
+}
+
+void SetPixel(Dot pixel, Scale scale)
+{
+	
 }
 
 
