@@ -22,6 +22,7 @@ void Sorting()
 		switch (choice) {
 		case 1:
 			SortArray(array); // отсортировать массив (задание по варианту)
+			printf("The array: \n");
 			PrintArray(array);
 			break;
 		case 2:
@@ -30,20 +31,12 @@ void Sorting()
 		}
 	} while (choice != 1 && choice != 2);
 
-	printf("\n");
-	system("pause");
-
 	delete[] array.items;
 }
 
 // _______________________ Служебные функции ___________________________
 
-void PrintArray(MyArray array)
-{
-	printf("\nThe array: \n");
-	for (int i = 0; i < array.number; i++) 
-		printf("Item %d: %.1f \n", i + 1, array.items[i]);
-}
+
 
 void SwapTwoItems(float* item1, float* item2)
 {
@@ -74,34 +67,65 @@ void SortArray(MyArray array) {
 
 void SortByStep(MyArray array)
 {
-	HANDLE hStdout;
-	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	DWORD Buf;
-	COORD coords = { 0, 0 };
-	
+	system("cls");
+	printf("The array: \n");
+	PrintArray(array);
 
 	// сортировка
 	int flag;
+	int* swappedIndex = new int[array.number]; // какие индексы нужно закрасить
+	int y = 2; // высота рисования в консоли
+	
 	do {
-		flag = 0; 
+		flag = 0;
+		int swapCounter = 0; // счётчик кол-ва обменов
+		// обнуляем индексы
+		for (int i = 0; i < array.number; i++)
+			swappedIndex[i] = 0;
+
 		for (int i = 0; i < array.number - 1; i++) {
-			if (i < array.number / 2) {
-				if (!(array.items[i] < array.items[i + 1]))
-					continue;
+			// сортировка первой половины
+			if (i < array.number / 2 - 1) {
+				if (array.items[i] < array.items[i + 1]) {
+					// флаг параллельно отслеживает кол-во свапнутых элементов
+					SwapTwoItems(&(array.items[i]), &(array.items[i + 1]));
+					flag++;
+					// счётчик инкрементируется в квадратных скобках [] !!
+					swappedIndex[swapCounter++] = i; 
+					swappedIndex[swapCounter++] = i + 1;
+				}
 			}
 			else {
-				if (!(array.items[i] > array.items[i + 1]))
+				// если взяли индекс из первой половины
+				if (i == array.number / 2 - 1) 
 					continue;
+
+				// сортировка второй половины
+				if (array.items[i] > array.items[i + 1]) {
+					SwapTwoItems(&(array.items[i]), &(array.items[i + 1]));
+					flag++;
+					// счётчик инкрементируется в квадратных скобках [] !!
+					swappedIndex[swapCounter++] = i;
+					swappedIndex[swapCounter++] = i + 1;
+				}
 			}
-			SwapTwoItems(&(array.items[i]), &(array.items[i + 1]));
-
-
-			coords.Y = 22;
-			coords.X = (array.items[i]);
-			printf("%.1f ", array.items[i]);
-			FillConsoleOutputAttribute(hStdout, 0x47, 3, coords, &Buf);
 		}
-			
+
+		PrintArray(array);
+
+		HANDLE hStdout;
+		hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+		DWORD Buf;
+		for (int i = 0; i < swapCounter; i++) {
+			COORD coords = { swappedIndex[i] * 8 + 3, y };
+			FillConsoleOutputAttribute(hStdout, 0x47, 5, coords, &Buf);
+		}
+		
+		
+		y++;
+		_getch();
 	} while (flag != 0);
+
+	delete[] swappedIndex;
 }
 

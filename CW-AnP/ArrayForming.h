@@ -17,6 +17,8 @@ void RandomArray(MyArray array);
 // считать массив из файла (child 3)
 void GetArrayFromFile(MyArray array);
 
+// вывести массив (в строку)
+void PrintArray(MyArray);
 // флотовый рандом
 float FloatRandom(float leftBorder, float rightBorder);
 

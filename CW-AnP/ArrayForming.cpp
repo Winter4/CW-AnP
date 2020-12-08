@@ -37,12 +37,12 @@ void EnterArrayByKeyboard(MyArray array)
 
 void RandomArray(MyArray array)
 {
-	printf("\nThe array: \n");
-	for (int i = 0; i < array.number; i++) {
-		// (b - a) * rand() / RAND_MAX + a
+	for (int i = 0; i < array.number; i++) 
 		array.items[i] = FloatRandom(-2 * array.number, 2 * array.number);
-		printf("Item %d: %.1f \n", i + 1, array.items[i]);
-	}
+
+	printf("The array: \n");
+	PrintArray(array);
+	printf("\n");
 }
 
 void GetArrayFromFile(MyArray array)
@@ -66,9 +66,15 @@ void GetArrayFromFile(MyArray array)
 	for (i; i < array.number; i++) // дозаполнение рандомом
 		array.items[i] = FloatRandom(-2 * array.number, 2 * array.number);
 
-	printf("\nThe array: \n"); // вывод в консоль
+	printf("The array: \n");
+	PrintArray(array);
+}
+
+void PrintArray(MyArray array)
+{
 	for (int i = 0; i < array.number; i++)
-		printf("Item %d: %.1f \n", i + 1, array.items[i]);
+		printf("%8.1f", array.items[i]);
+	printf("\n");
 }
 
 float FloatRandom(float leftBorder, float rightBorder)
