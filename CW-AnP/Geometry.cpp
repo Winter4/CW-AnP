@@ -38,15 +38,15 @@ void Geometry()
 	int linesNumber = dotsNumber * (dotsNumber - 1) / 2;
 	Line* lines = new Line[linesNumber];
 	// массив всех возможных прямых через 2 точки
-	Line chosenLine = MyTask(dots, circles, dotsNumber, circlesNumber, &lines); // основная функция
+	Line chosenLine = MyTask(dots, circles, dotsNumber, circlesNumber, lines); // основная функция
 	
 	// __________________________________ Графика _____________________________
 
 	Draw(dots, dotsNumber, circles, circlesNumber, lines, linesNumber);
 
-	delete dots;
-	delete circles;
-	delete lines;
+	delete[] dots;
+	delete[] circles;
+	delete[] lines;
 	_getch();
 }
 
@@ -196,7 +196,7 @@ void GetCirclesFromFile(Circle* circles, int circlesNumber)
 
 // ______________________ Задание по варианту ___________________________
 
-Line MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber, Line** lines)
+Line MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber, Line* lines)
 {
 	int minCrossedCircles = INT_MAX; // значение пересеченных окружностей для ответа
 
@@ -224,7 +224,7 @@ Line MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber, Line*
 				chosenLine = { dots[i].x, dots[i].y, dots[j].x, dots[j].y };
 			}
 
-			*lines[linesCount] = { dots[i].x, dots[i].y, dots[j].x, dots[j].y };
+			lines[linesCount] = { dots[i].x, dots[i].y, dots[j].x, dots[j].y };
 			linesCount++;
 		}
 
@@ -257,7 +257,6 @@ void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* l
 		return;
 	}
 
-	
 	HBRUSH backgroundBrush = CreateSolidBrush(RGB(255, 255, 255));; // кисть для фона
 	HPEN backgroundPen = CreatePen(0, 0, RGB(255, 255, 255));
 
@@ -270,7 +269,7 @@ void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* l
 
 	// границы, в которых лежат точки и окружности (прямые не в счёт)
 	Borders drawBorders = CalcGraphBorders(dots, dotsNumber, circles, circlesNumber); // границы графика
-	Scale scale = CalcScale(windowCenter, drawBorders); // масштаб нереальные\реальные координаты
+	Parameter scale = CalcScale(drawBorders); // масштаб нереальные\реальные координаты
 
 	int key = 0;
 	do {
@@ -280,8 +279,7 @@ void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* l
 		SelectObject(dc, backgroundPen);
 		Rectangle(dc, windowSize.left, windowSize.top, windowSize.right, windowSize.bottom);
 
-		MakeGrid(windowCenter);
-		MakeAxis(windowCenter);
+		MakeGrid(drawBorders, MakeAxis(drawBorders, scale), scale);
 		MakeElements(windowCenter, windowSize, dots, dotsNumber, circles, circlesNumber, drawBorders, lines, linesNumber);
 
 		key = _getch();
@@ -290,69 +288,133 @@ void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* l
 	ReleaseDC(wnd, dc);
 }
 
-void MakeGrid(Dot windowCenter)
+void MakeGrid(Borders drawBorders, Parameter axis, Parameter scale)
 {
 	HPEN gridPen = CreatePen(PS_DOT, 2, RGB(200, 200, 200));
 	SelectObject(dc, gridPen);
 
-	for (int i = -10; i <= 10; i++) {
-		// горизонтальные линии
-		MoveToEx(dc, windowCenter.x - DELTA * 10, windowCenter.y + DELTA * i, 0);
-		LineTo(dc, windowCenter.x + DELTA * 10, windowCenter.y + DELTA * i);
+	LOGFONT lFont = { 0 };
+	lFont.lfHeight = 12;
+	lFont.lfWeight = 900;
+	lFont.lfWidth = 8;
 
-		// вертикальные линии
-		MoveToEx(dc, windowCenter.x + DELTA * i, windowCenter.y - DELTA * 10, 0);
-		LineTo(dc, windowCenter.x + DELTA * i, windowCenter.y + DELTA * 10);
+	char S[25];
+	strcpy((char*)lFont.lfFaceName, "Calibri");
+
+	HFONT font = CreateFontIndirect(&lFont);
+
+	SetTextColor(dc, RGB(0, 0, 0));
+	SetBkColor(dc, RGB(255, 255, 255));
+
+	TextOutA(dc, axis.y - DELTA, windowSize.top + DELTA - 8, (LPCSTR)"Y", 1);
+	TextOutA(dc, windowSize.right - DELTA + 2, axis.x - 5, (LPCSTR)"X", 1);
+
+	Parameter realCoords = { 0 };
+	float dx = (drawBorders.x_max - drawBorders.x_min) / 10;
+
+	for (float x = drawBorders.x_min; x <= drawBorders.x_max; x += dx) {
+		realCoords.x = DELTA + scale.x * (x - drawBorders.x_min);
+
+		MoveToEx(dc, realCoords.x, windowSize.top, 0);
+		LineTo(dc, realCoords.x, windowSize.bottom);
+
+		sprintf(S, "%.1f", x);
+		TextOutA(dc, realCoords.x, axis.x + 8, (LPCSTR)S, strlen(S));
 	}
+
+	float dy = (drawBorders.y_max - drawBorders.y_min) / 10;
+	for (float y = drawBorders.y_min + DELTA; y <= drawBorders.x_max; y += dy) {
+		realCoords.y = windowSize.bottom - scale.y * (y - drawBorders.y_min) - DELTA;
+
+		MoveToEx(dc, windowSize.left, realCoords.y, 0);
+		LineTo(dc, windowSize.right + DELTA, realCoords.y);
+
+		sprintf(S, "%.1f", y);
+		TextOutA(dc, axis.y + 5, realCoords.y, (LPCSTR)S, strlen(S));
+	}
+
+	DeleteObject(gridPen);
+	DeleteObject(font);
 }
 
-void MakeAxis(Dot windowCenter)
+Parameter MakeAxis(Borders drawBorders, Parameter scale)
 {
 	HPEN axisPen = CreatePen(PS_SOLID, 2, RGB(70, 70, 70));
 	SelectObject(dc, axisPen);
 
+	Parameter axis = { 0 };
+	if (drawBorders.x_min * drawBorders.x_max < 0)
+		axis.y = fabs(drawBorders.x_min) * scale.x + DELTA;
+	else
+		if (drawBorders.x_min >= 0)
+			axis.y = DELTA;
+		else
+			axis.y = windowSize.right - DELTA;
+
+	if (drawBorders.y_min * drawBorders.y_max < 0)
+		axis.x = windowSize.bottom - fabs(drawBorders.y_min) * scale.y - DELTA;
+	else
+		if (drawBorders.y_min >= 0)
+			axis.x = windowSize.bottom - DELTA;
+		else
+			axis.x = DELTA;
+
 	// ось X
-	MoveToEx(dc, windowCenter.x, windowCenter.y - EDGE_HALF, 0);
-	LineTo(dc, windowCenter.x, windowCenter.y + EDGE_HALF);
+	MoveToEx(dc, DELTA, axis.x, 0);
+	LineTo(dc, windowSize.right - DELTA, axis.x);
 
 	// ось Y
-	MoveToEx(dc, windowCenter.x - EDGE_HALF, windowCenter.y, 0);
-	LineTo(dc, windowCenter.x + EDGE_HALF, windowCenter.y);
+	MoveToEx(dc, axis.y, windowSize.top, 0);
+	LineTo(dc, axis.y, windowSize.bottom);
 
-
-}
-
-Scale CalcScale(Dot windowCenter, Borders drawBorders)
-{
-	Scale scale = { 0 };
-	//scale.x = (EDGE_HALF * 2) / (drawBorders.x_max - drawBorders.x_min);
-	//scale.y = (EDGE_HALF * 2) / (drawBorders.y_max - drawBorders.y_min);
-	//scale.x = (windowCenter.x - EDGE_HALF) / drawBorders.x_min;
-	//scale.y = (windowCenter.y + EDGE_HALF) / drawBorders.x_min;
-	scale.x = (windowSize.right - windowSize.left) / DELTA;
-	scale.y = (windowSize.bottom - windowSize.top) / DELTA;
-
-	return scale;
+	DeleteObject(axisPen);
+	return axis;
 }
 
 void MakeElements(Dot windowCenter, RECT windowSize, Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Borders drawBorders, Line* lines, int linesNumber)
 {
 	HPEN linePen = CreatePen(PS_SOLID, 2, RGB(0, 255, 0));
 	SelectObject(dc, linePen);
-	Scale scale = CalcScale(windowCenter, drawBorders);
+	Parameter scale = CalcScale(drawBorders);
 
-	/*for (int i = 0; i < linesNumber; i++) {
-		float y = (drawBorders.x_min - lines[i].x1) / (lines[i].y2 - lines[i].y1) * 
-			(lines[i].x2 - lines[i].x1) + lines[i].y1;
-		MoveToEx(dc, drawBorders.x_min * scale.x, y * scale.y, 0);
-		y = (drawBorders.x_max - lines[i].x1) / (lines[i].y2 - lines[i].y1) *
-			(lines[i].x2 - lines[i].x1) + lines[i].y1;
-		LineTo(dc, drawBorders.x_max * scale.x, y);
-	}*/
-	MoveToEx(dc, -10 * DELTA + windowCenter.x, windowCenter.y, 0);
-	LineTo(dc, 5 * DELTA + windowCenter.x, windowCenter.y);
-	//YMax - (Y - Func_Min) * Y_Coeff
-	//XMin + (X - X0) * X_Coeff
+	float dx = (drawBorders.x_max - drawBorders.x_min) / 200;
+
+	Parameter realCoords = { 0 };
+	// рисование прямых
+	for (int i = 0; i < linesNumber; i++) {
+		realCoords.x = windowSize.left + DELTA;
+		// значение функции в левой\правой части графика
+		// в этой строке - в левой части
+		float func = (drawBorders.x_min - lines[i].x1) / (lines[i].y2 - lines[i].y1) * (lines[i].x2 - lines[i].x1) + lines[i].y1;
+		realCoords.y = windowSize.bottom - (func - drawBorders.y_min) * scale.y - DELTA;
+		MoveToEx(dc, realCoords.x, realCoords.y, 0);
+
+		realCoords.x = windowSize.left + (drawBorders.x_max - drawBorders.x_min) * scale.x + DELTA;
+		// в этой строке - в правой
+		func = (drawBorders.x_max - lines[i].x1) / (lines[i].y2 - lines[i].y1) * (lines[i].x2 - lines[i].x1) + lines[i].y1;
+		realCoords.y = windowSize.bottom - (func - drawBorders.y_min) * scale.y - DELTA;
+		LineTo(dc, realCoords.x, realCoords.y);
+	}
+
+	HPEN dotPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255));
+	SelectObject(dc, dotPen);
+	// рисование точек
+	for (int i = 0; i < dotsNumber; i++) {
+		realCoords.x = windowSize.left + (dots[i].x - drawBorders.x_min) * scale.x + DELTA;
+		realCoords.y = windowSize.bottom - (dots[i].y - drawBorders.y_min) * scale.y - DELTA;
+
+
+		Ellipse(dc, realCoords.x - 1, realCoords.y - 1, realCoords.y + 1, realCoords.y + 1);
+	}
+}
+
+Parameter CalcScale(Borders drawBorders)
+{
+	Parameter scale = { 0 };
+	scale.x = (windowSize.right - 2 * DELTA) / (drawBorders.x_max - drawBorders.x_min);
+	scale.y = (windowSize.bottom - 2 * DELTA) / (drawBorders.y_max - drawBorders.y_min);
+
+	return scale;
 }
 
 Borders CalcGraphBorders(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber)

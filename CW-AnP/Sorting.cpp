@@ -9,10 +9,7 @@
 void Sorting()
 {
 	MyArray array = { 0 };
-
 	FormArray(&array); // сформировать массив
-	SortArray(array); // отсортировать массив (задание по варианту)
-	printf ("\nThe array has been sorted.");
 	
 	printf("\nChoose the method of array printing: ");
 	printf("\n1 - Print all \n2 - Print by step \n");
@@ -24,10 +21,11 @@ void Sorting()
 
 		switch (choice) {
 		case 1:
-			PrintAll(array);
+			SortArray(array); // отсортировать массив (задание по варианту)
+			PrintArray(array);
 			break;
 		case 2:
-			PrintByStep(array);
+			SortByStep(array);
 			break;
 		}
 	} while (choice != 1 && choice != 2);
@@ -40,7 +38,7 @@ void Sorting()
 
 // _______________________ Служебные функции ___________________________
 
-void PrintAll(MyArray array)
+void PrintArray(MyArray array)
 {
 	printf("\nThe array: \n");
 	for (int i = 0; i < array.number; i++) 
@@ -56,13 +54,10 @@ void SwapTwoItems(float* item1, float* item2)
 
 // _______________________ Задание по варианту _________________________
 
-void SortArray(MyArray array)
-{
-	// передать диапазон и флаг, в какую сторону
-	// 0 - n/2; n/2 + 1 - n
+void SortArray(MyArray array) {
 	int flag;
 	do {
-		flag = 0; // обнуляем флаг перед заходом на цикл
+		flag = 0; 
 		for (int i = 0; i < array.number / 2 - 1; i++)
 			if (array.items[i + 1] > array.items[i]) {
 				SwapTwoItems(&(array.items[i + 1]), &(array.items[i]));
@@ -70,30 +65,43 @@ void SortArray(MyArray array)
 			}
 
 		for (int i = array.number / 2; i < array.number - 1; i++)
-			if (array.items[i + 1] < array.items[i]) {           // по возрастанию
+			if (array.items[i + 1] < array.items[i]) {           
 				SwapTwoItems(&(array.items[i + 1]), &(array.items[i]));
 				flag++;
 			}
 	} while (flag != 0);
 }
 
-void PrintByStep(MyArray array)
+void SortByStep(MyArray array)
 {
-	printf("\nPress 'N' button (next) to print one item; \nPress 'S' button (skip) to print all items. \nThe array: ");
-	int key = 0, i = 0;
-	printf("\n");
-	while (i < array.number) {
-		key = _getch();
+	HANDLE hStdout;
+	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD Buf;
+	COORD coords = { 0, 0 };
+	
 
-		switch (key) {
-		case 110: // клавиша N
-			printf("Item %d: %.1f \n", i, array.items[i++]);
-			break;
-		case 115: // клавиша S
-			for (i; i < array.number; i++)
-				printf("Item %d: %.1f \n", i + 1, array.items[i]);
-			break;
+	// сортировка
+	int flag;
+	do {
+		flag = 0; 
+		for (int i = 0; i < array.number - 1; i++) {
+			if (i < array.number / 2) {
+				if (!(array.items[i] < array.items[i + 1]))
+					continue;
+			}
+			else {
+				if (!(array.items[i] > array.items[i + 1]))
+					continue;
+			}
+			SwapTwoItems(&(array.items[i]), &(array.items[i + 1]));
+
+
+			coords.Y = 22;
+			coords.X = (array.items[i]);
+			printf("%.1f ", array.items[i]);
+			FillConsoleOutputAttribute(hStdout, 0x47, 3, coords, &Buf);
 		}
-	}
+			
+	} while (flag != 0);
 }
 

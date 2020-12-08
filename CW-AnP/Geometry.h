@@ -49,7 +49,7 @@ void RandomCircles(Circle*, int);
 // взять окружности из файла (мн. B)
 void GetCirclesFromFile(Circle*, int);
 
-Line MyTask(Dot*, Circle*, int, int, Line**);
+Line MyTask(Dot*, Circle*, int, int, Line*);
 
 // __________________________ Графика _____________________________
 
@@ -65,7 +65,7 @@ struct Borders {
 };
 
 // масштаб
-struct Scale {
+struct Parameter {
 	float x;
 	float y;
 };
@@ -83,14 +83,14 @@ struct Scale {
 // отрисовать график
 void Draw(Dot*, int, Circle*, int, Line*, int);
 // нарисовать сетку
-void MakeGrid(Dot);
+void MakeGrid(Borders, Parameter axis, Parameter scale);
 // нарисовать оси
-void MakeAxis(Dot);
-// вычислить масштаб
-Scale CalcScale(Dot, Borders);
+Parameter MakeAxis(Borders, Parameter scale);
 // нарисовать элементы
 void MakeElements(Dot, RECT, Dot*, int, Circle*, int, Borders, Line*, int);
 
+// вычислить масштаб
+Parameter CalcScale(Borders);
 // вычислить границы отрисовки
 Borders CalcGraphBorders(Dot*, int, Circle*, int);
 
