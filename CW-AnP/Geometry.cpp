@@ -7,9 +7,6 @@ HWND wnd;
 HDC dc;
 
 RECT windowSize; // размеры окна
-	
-
-HBRUSH backgroundBrush;
 
 void Geometry() 
 {
@@ -40,42 +37,12 @@ void Geometry()
 	// количество прямых, которые можно провести через n точек
 	int linesNumber = dotsNumber * (dotsNumber - 1) / 2;
 	Line* lines = new Line[linesNumber];
-	Line chosenLine = MyTask(dots, circles, dotsNumber, circlesNumber, &lines); 
+	// массив всех возможных прямых через 2 точки
+	Line chosenLine = MyTask(dots, circles, dotsNumber, circlesNumber, &lines); // основная функция
 	
 	// __________________________________ Графика _____________________________
 
-	wnd = GetConsoleWindow(); // получаем окно
-	MoveWindow(wnd, 50, 20, 1366, 768, NULL); // двигаем окно на экране
-
-	// страж 
-	if (!wnd) { 
-		printf("Can't get window of console!\n");
-		system("pause");
-		return;
-	}
-
-	dc = GetDC(wnd); // получаем дескриптор окна
-	// страж
-	if (!dc) {
-		printf("Can't get device context!\n");
-		system("pause");
-		return;
-	}
-	
-	// получаем размеры окна
-	GetClientRect(wnd, &windowSize);
-
-	Dot windowCenter;
-	windowCenter.x = (windowSize.right - windowSize.left) / 2;
-	windowCenter.y = (windowSize.bottom - windowSize.top) / 2;
-	
-	Borders drawBorders = CalcGraphBorders(dots, dotsNumber, circles, circlesNumber); // границы графика
-	Scale scale = CalcScale(windowSize, drawBorders);
-	
-	backgroundBrush = CreateSolidBrush(RGB(255, 255, 255));
-	Draw(drawBorders, windowCenter, dots, dotsNumber, circles, circlesNumber, lines, linesNumber);
-
-	ReleaseDC(wnd, dc);
+	Draw(dots, dotsNumber, circles, circlesNumber, lines, linesNumber);
 
 	delete dots;
 	delete circles;
@@ -270,20 +237,62 @@ Line MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber, Line*
 
 // _______________________________ Графика _______________________________________
 
-void Draw(Borders drawBorders, Dot windowCenter, Dot* dots, int dotsNumber, Circle* circles,
-	int circlesNumber, Line* lines, int linesNumber)
+void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* lines, int linesNumber)
 {
-	system("cls");
-	SelectObject(dc, backgroundBrush);
-	Rectangle(dc, windowSize.left, windowSize.top, windowSize.right, windowSize.bottom);
-	MakeGrid(windowCenter);
-	MakeAxis(windowCenter);
-	MakeElements(dots, dotsNumber, circles, circlesNumber, drawBorders, lines, linesNumber);
+	wnd = GetConsoleWindow(); // получаем окно
+	MoveWindow(wnd, 50, 20, 1366, 768, NULL); // двигаем окно на экране
+
+	// страж 
+	if (!wnd) {
+		printf("Can't get window of console!\n");
+		system("pause");
+		return;
+	}
+
+	dc = GetDC(wnd); // получаем дескриптор окна
+	// страж
+	if (!dc) {
+		printf("Can't get device context!\n");
+		system("pause");
+		return;
+	}
+
+	
+	HBRUSH backgroundBrush = CreateSolidBrush(RGB(255, 255, 255));; // кисть для фона
+	HPEN backgroundPen = CreatePen(0, 0, RGB(255, 255, 255));
+
+	// получаем размеры окна
+	GetClientRect(wnd, &windowSize);
+
+	Dot windowCenter; // реальная точка в центре экрана
+	windowCenter.x = (windowSize.right - windowSize.left) / 2;
+	windowCenter.y = (windowSize.bottom - windowSize.top) / 2;
+
+	// границы, в которых лежат точки и окружности (прямые не в счёт)
+	Borders drawBorders = CalcGraphBorders(dots, dotsNumber, circles, circlesNumber); // границы графика
+	Scale scale = CalcScale(windowCenter, drawBorders); // масштаб нереальные\реальные координаты
+
+	int key = 0;
+	do {
+		system("cls");
+
+		SelectObject(dc, backgroundBrush);
+		SelectObject(dc, backgroundPen);
+		Rectangle(dc, windowSize.left, windowSize.top, windowSize.right, windowSize.bottom);
+
+		MakeGrid(windowCenter);
+		MakeAxis(windowCenter);
+		MakeElements(windowCenter, windowSize, dots, dotsNumber, circles, circlesNumber, drawBorders, lines, linesNumber);
+
+		key = _getch();
+	} while (key != KB_ESC);
+
+	ReleaseDC(wnd, dc);
 }
 
 void MakeGrid(Dot windowCenter)
 {
-	HPEN gridPen = CreatePen(PS_DOT, 2, RGB(169, 169, 169));
+	HPEN gridPen = CreatePen(PS_DOT, 2, RGB(200, 200, 200));
 	SelectObject(dc, gridPen);
 
 	for (int i = -10; i <= 10; i++) {
@@ -313,30 +322,37 @@ void MakeAxis(Dot windowCenter)
 
 }
 
-Scale CalcScale(RECT windowSize, Borders drawBorders)
+Scale CalcScale(Dot windowCenter, Borders drawBorders)
 {
 	Scale scale = { 0 };
-	scale.x = windowSize.right / (drawBorders.x_max - drawBorders.x_min);
-	scale.y = windowSize.bottom / (drawBorders.y_max - drawBorders.y_min);
+	//scale.x = (EDGE_HALF * 2) / (drawBorders.x_max - drawBorders.x_min);
+	//scale.y = (EDGE_HALF * 2) / (drawBorders.y_max - drawBorders.y_min);
+	//scale.x = (windowCenter.x - EDGE_HALF) / drawBorders.x_min;
+	//scale.y = (windowCenter.y + EDGE_HALF) / drawBorders.x_min;
+	scale.x = (windowSize.right - windowSize.left) / DELTA;
+	scale.y = (windowSize.bottom - windowSize.top) / DELTA;
 
 	return scale;
 }
 
-void MakeElements(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Borders drawBorders, Line* lines, int linesNumber)
+void MakeElements(Dot windowCenter, RECT windowSize, Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Borders drawBorders, Line* lines, int linesNumber)
 {
-	HPEN linePen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+	HPEN linePen = CreatePen(PS_SOLID, 2, RGB(0, 255, 0));
 	SelectObject(dc, linePen);
-	Scale scale = CalcScale(windowSize, drawBorders);
-	for (int i = 0; i < linesNumber; i++) {
+	Scale scale = CalcScale(windowCenter, drawBorders);
+
+	/*for (int i = 0; i < linesNumber; i++) {
 		float y = (drawBorders.x_min - lines[i].x1) / (lines[i].y2 - lines[i].y1) * 
 			(lines[i].x2 - lines[i].x1) + lines[i].y1;
 		MoveToEx(dc, drawBorders.x_min * scale.x, y * scale.y, 0);
 		y = (drawBorders.x_max - lines[i].x1) / (lines[i].y2 - lines[i].y1) *
 			(lines[i].x2 - lines[i].x1) + lines[i].y1;
 		LineTo(dc, drawBorders.x_max * scale.x, y);
-	}
-	
-
+	}*/
+	MoveToEx(dc, -10 * DELTA + windowCenter.x, windowCenter.y, 0);
+	LineTo(dc, 5 * DELTA + windowCenter.x, windowCenter.y);
+	//YMax - (Y - Func_Min) * Y_Coeff
+	//XMin + (X - X0) * X_Coeff
 }
 
 Borders CalcGraphBorders(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber)
@@ -363,160 +379,3 @@ Borders CalcGraphBorders(Dot* dots, int dotsNumber, Circle* circles, int circles
 
 	return example;
 }
-
-void SetPixel(Dot pixel, Scale scale)
-{
-	
-}
-
-
-/*
-void clearscreen(int red, int green, int blue)
-{
-	hBrush = CreateSolidBrush(RGB(red, green, blue));
-	SelectObject(hDC, hBrush);
-
-	Rectangle(hDC, Rect.left, Rect.top, Rect.right + DX, Rect.bottom);
-
-	DeleteObject(hBrush);
-}
-
-void DrawAxis(Limits limits, Scale scale, int* Osx, int* Osy)
-{
-	if (limits.left * limits.right < 0)
-		*Osy = fabs(limits.left) * scale.x + DX;
-	else
-		if (limits.left >= 0)
-			*Osy = DX;
-		else
-			*Osy = Rect.right - DX;
-
-	if (limits.bot * limits.top < 0)
-		*Osx = Rect.bottom - fabs(limits.bot) * scale.y - DY;
-	else
-		if (limits.bot >= 0)
-			*Osx = Rect.bottom - DY;
-		else
-			*Osx = DY;
-
-	hPen = CreatePen(PS_SOLID, 3, RGB(0, 0, 0));
-
-	MoveToEx(hDC, DX, *Osx, NULL);
-	LineTo(hDC, Rect.right - DX, *Osx);
-
-	MoveToEx(hDC, *Osy, DY, NULL);
-	LineTo(hDC, *Osy, Rect.bottom - DY);
-
-	DeleteObject(hPen);
-}
-
-void DrawGrid(Limits limits, Scale scale, int Osx, int Osy)
-{
-	hPen = CreatePen(PS_DOT, 1, RGB(255, 0, 255));
-
-	Lf.lfHeight = 12;
-	Lf.lfWeight = 900;
-	Lf.lfWidth = 8;
-
-	CHAR S[25];
-
-	strcpy((char*)Lf.lfFaceName, "Calibri");
-
-	hFont = CreateFontIndirect(&Lf);
-
-	SetTextColor(hDC, RGB(0, 0, 0));
-	SetBkColor(hDC, RGB(255, 255, 255));
-
-	TextOutA(hDC, Osy - 20, Rect.top + DY - 8, (LPCSTR)"Y", 1);
-	TextOutA(hDC, Rect.right - DX + 2, Osx - 5, (LPCSTR)"X", 1);
-
-	// строим саму сетку
-	float y;
-	int x_real, y_real;
-	float dx = (limits.right - limits.left) / 10;
-	RECT d;
-
-	for (float x = limits.left; x <= limits.right; x += dx) {
-		x_real = DX + scale.x * (x - limits.left);
-
-		MoveToEx(hDC, x_real, Rect.top, NULL);
-		LineTo(hDC, x_real, Rect.bottom);
-
-		sprintf(S, "%.1f", x);
-		TextOutA(hDC, x_real, Osx + 8, (LPCSTR)S, strlen(S));
-	}
-
-	float dy = (limits.top - limits.bot) / 10;
-	for (y = limits.bot; y < limits.top + dy; y += dy) {
-
-		y_real = Rect.bottom - scale.y * (y - limits.bot) - DY;
-
-		MoveToEx(hDC, Rect.left, y_real, NULL);
-		LineTo(hDC, Rect.right + DX, y_real);
-
-		sprintf(S, "%.1f", y);
-		TextOutA(hDC, Osy + 5, y_real, (LPCSTR)S, strlen(S));
-	}
-
-	DeleteObject(hPen);
-	DeleteObject(hFont);
-}
-
-void CalculateBorders(Limits* limits, Dot* dots, Circle* circles, int dotsAmount, int circlesAmount)
-{
-	for (int i = 0; i < dotsAmount; i++) {
-		if (dots[i].x < (*limits).left) (*limits).left = dots[i].x;
-		if (dots[i].x > (*limits).right) (*limits).right = dots[i].x;
-
-		if (dots[i].y > (*limits).top) (*limits).top = dots[i].y;
-		if (dots[i].y < (*limits).bot) (*limits).bot = dots[i].y;
-	}
-	for (int i = 0; i < circlesAmount; i++) {
-		if (circles[i].x - circles[i].r < (*limits).left) (*limits).left = circles[i].x - circles[i].r;
-		if (circles[i].x + circles[i].r > (*limits).right) (*limits).right = circles[i].x + circles[i].r;
-
-		if (circles[i].y - circles[i].r < (*limits).bot) (*limits).bot = circles[i].x - circles[i].r;
-		if (circles[i].y + circles[i].r > (*limits).top) (*limits).top = circles[i].x + circles[i].r;
-	}
-}
-
-void Draw(Dot* dots, Circle* circles, Limits limits, int dotsAmount, int circlesAmount)
-{
-	int Osx, Osy;
-	int x_real, y_real;
-
-	scale.x = (Rect.right - 2 * DX) / (limits.right - limits.left);
-	scale.y = (Rect.bottom - 2 * DY) / (limits.top - limits.bot);
-
-	SelectObject(hDC, hOldPen);
-
-	system("cls");
-	//clearscreen(255, 255, 255);
-	DrawAxis(limits, scale, &Osx, &Osy);
-	DrawGrid(limits, scale, Osx, Osy);
-
-	float dx = (limits.right - limits.left) / 200;
-
-	// цвет линий, стиль линий
-	hPen = CreatePen(PS_SOLID, 5, RGB(0, 0, 255));
-	hOldPen = (HPEN)SelectObject(hDC, hPen);
-
-	x_real = Rect.left + (x - leftLim) * x_scale + DX;
-	y_real = Rect.bottom - (y - y_min) * y_scale - DY;
-
-	MoveToEx(hDC, x_real, y_real, NULL); // начало графика
-
-	// строим график
-	do {
-		x += dx;
-		y = f(x);
-
-		x_real = Rect.left + (x - leftLim) * x_scale + DX;
-		y_real = Rect.bottom - (y - y_min) * y_scale - DY;
-
-		LineTo(hDC, x_real, y_real);
-	} while (x < rightLim - dx);
-
-	DeleteObject(hPen);
-}
-*/

@@ -70,8 +70,8 @@ struct Scale {
 	float y;
 };
 
-#define DELTA 25
-#define EDGE_HALF DELTA * 10 // половина оси сетки
+#define DELTA 25 // 1 клеточка (шир-дл)
+#define EDGE_HALF DELTA * 10 // половина оси сетки = 250
 
 #define KB_RIGHT 77
 #define KB_LEFT 75
@@ -81,21 +81,19 @@ struct Scale {
 #define KB_ESC 27
 
 // отрисовать график
-void Draw(Borders, Dot, Dot*, int, Circle*,
-	int, Line*, int);
+void Draw(Dot*, int, Circle*, int, Line*, int);
 // нарисовать сетку
 void MakeGrid(Dot);
 // нарисовать оси
 void MakeAxis(Dot);
 // вычислить масштаб
-Scale CalcScale(RECT, Borders);
+Scale CalcScale(Dot, Borders);
 // нарисовать элементы
-void MakeElements(Dot*, int, Circle*, int, Borders, Line*, int);
+void MakeElements(Dot, RECT, Dot*, int, Circle*, int, Borders, Line*, int);
 
 // вычислить границы отрисовки
 Borders CalcGraphBorders(Dot*, int, Circle*, int);
-// нарисовать пиксель
-void SetPixel(Dot, Scale);
+
 
 
 
