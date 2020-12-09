@@ -53,8 +53,6 @@ Line MyTask(Dot*, Circle*, int, int, Line*);
 
 // __________________________ Графика _____________________________
 
-#include "winuser.h"
-
 // границы
 struct Borders {
 	float x_min;
@@ -69,6 +67,9 @@ struct Parameter {
 	float x;
 	float y;
 };
+
+HWND wnd;
+HDC dc;
 
 #define DELTA 25 // 1 клеточка (шир-дл)
 #define EDGE_HALF DELTA * 10 // половина оси сетки = 250
@@ -93,17 +94,3 @@ void MakeElements(Dot, RECT, Dot*, int, Circle*, int, Borders, Line*, int);
 Parameter CalcScale(Borders);
 // вычислить границы отрисовки
 Borders CalcGraphBorders(Dot*, int, Circle*, int);
-
-
-
-
-
-/*
-//void dot(HDC hDC, int x, int y, COLORREF Color);
-void clearscreen(int red, int green, int blue);
-void DrawAxis(Limits, Scale, int*, int*);
-void DrawGrid(Limits, Scale, int, int);
-// вычислить границы отрисовки
-void CalculateBorders(Limits*, Dot*, Circle*, int, int);
-void Draw(Dot*, Circle*, int, int);
-*/

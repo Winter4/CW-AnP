@@ -16,9 +16,9 @@ void HandleFile()
 
 	// вводим его имя
 	printf("Enter the file name: ");
-	//gets_s(fileName);
-	strcpy(fileName, "Sorting.txt");
-
+	scanf("%s", &fileName);
+	printf("%s", fileName);
+	system("pause");
 	// открываем файл для записи, записываем массив в файл
 	file = fopen(fileName, "wb");
 	if (file == NULL) {

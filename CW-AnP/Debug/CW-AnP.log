@@ -1,2 +1,4 @@
 ﻿  Main.cpp
-  CW-AnP.vcxproj -> C:\Users\Admin\Documents\GitHub\CW-AnP\CW-AnP\Debug\CW-AnP.exe
+Main.obj : error LNK2005: "struct HWND__ * wnd" (?wnd@@3PAUHWND__@@A) уже определен в Geometry.obj
+Main.obj : error LNK2005: "struct HDC__ * dc" (?dc@@3PAUHDC__@@A) уже определен в Geometry.obj
+C:\Users\User\Documents\GitHub\CW-AnP\CW-AnP\Debug\CW-AnP.exe : fatal error LNK1169: обнаружен многократно определенный символ - один или более

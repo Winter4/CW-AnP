@@ -3,8 +3,7 @@
 
 #include "Geometry.h"
 
-HWND wnd;
-HDC dc;
+
 
 RECT windowSize; // размеры окна
 
