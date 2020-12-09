@@ -47,7 +47,9 @@ void Geometry()
 	delete[] dots;
 	delete[] circles;
 	delete[] lines;
-	_getch();
+	
+	printf("\n");
+	system("pause");
 }
 
 // __________________ Обработка точек ______________________
@@ -325,6 +327,7 @@ void MakeGrid(Borders drawBorders, Parameter axis, Parameter scale)
 	float dy = (drawBorders.y_max - drawBorders.y_min) / 10;
 	for (float y = drawBorders.y_min + DELTA; y <= drawBorders.x_max; y += dy) {
 		realCoords.y = windowSize.bottom - scale.y * (y - drawBorders.y_min) - DELTA;
+;
 
 		MoveToEx(dc, windowSize.left, realCoords.y, 0);
 		LineTo(dc, windowSize.right + DELTA, realCoords.y);
@@ -403,8 +406,15 @@ void MakeElements(Dot windowCenter, RECT windowSize, Dot* dots, int dotsNumber, 
 		realCoords.x = windowSize.left + (dots[i].x - drawBorders.x_min) * scale.x + DELTA;
 		realCoords.y = windowSize.bottom - (dots[i].y - drawBorders.y_min) * scale.y - DELTA;
 
+		MoveToEx(dc, realCoords.x, realCoords.y, 0);
+		LineTo(dc, realCoords.x, realCoords.y);
+	}
 
-		Ellipse(dc, realCoords.x - 1, realCoords.y - 1, realCoords.y + 1, realCoords.y + 1);
+	SelectObject(dc, GetStockObject(NULL_BRUSH));
+	for (int i = 0; i < circlesNumber; i++) {
+		realCoords.x = windowSize.left + (circles[i].x - drawBorders.x_min) * scale.x + DELTA;
+		realCoords.y = windowSize.bottom - (circles[i].y - drawBorders.y_min) * scale.y - DELTA;
+		Ellipse(dc, realCoords.x - circles[i].r * scale.x, realCoords.y + circles[i].r * scale.y, realCoords.x + circles[i].r * scale.x, realCoords.y - circles[i].r * scale.y);
 	}
 }
 
@@ -413,6 +423,9 @@ Parameter CalcScale(Borders drawBorders)
 	Parameter scale = { 0 };
 	scale.x = (windowSize.right - 2 * DELTA) / (drawBorders.x_max - drawBorders.x_min);
 	scale.y = (windowSize.bottom - 2 * DELTA) / (drawBorders.y_max - drawBorders.y_min);
+
+	if (scale.x > scale.y) scale.y = scale.x;
+	else scale.x = scale.y;
 
 	return scale;
 }

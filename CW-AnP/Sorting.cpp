@@ -32,6 +32,9 @@ void Sorting()
 	} while (choice != 1 && choice != 2);
 
 	delete[] array.items;
+
+	printf("\n");
+	system("pause");
 }
 
 // _______________________ Служебные функции ___________________________

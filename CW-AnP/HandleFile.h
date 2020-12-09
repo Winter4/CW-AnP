@@ -1,12 +1,8 @@
 #pragma once
-
+#include <iostream>
 #include "ArrayForming.h"
 
 //основная функция
-void HandleFile();
-void HandleFile();
-void HandleFile();
-void HandleFile();
 void HandleFile();
 
 // занести массив в файл

@@ -23,6 +23,7 @@ void FormArray(MyArray* array)
 		break;
 	case 3:
 		GetArrayFromFile(*array);
+		break;
 	}
 }
 
