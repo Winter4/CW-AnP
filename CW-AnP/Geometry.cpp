@@ -3,11 +3,12 @@
 
 #include "Geometry.h"
 
-
+HWND wnd;
+HDC dc;
 
 RECT windowSize; // размеры окна
 
-void Geometry() 
+void Geometry(int chosenMethod) 
 {
 	
 	printf("The <Geometry> task. \n");
@@ -19,7 +20,7 @@ void Geometry()
 
 	Dot* dots; // массив точек А
 	dots = new Dot[dotsNumber];
-	FormDots(dots, dotsNumber); // формирование массива точек А
+	FormDots(dots, dotsNumber, chosenMethod); // формирование массива точек А
 
 	// _______________________________________________________________________
 
@@ -31,7 +32,7 @@ void Geometry()
 
 	Circle* circles; // массив окружностей B
 	circles = new Circle[circlesNumber];
-	FormCircles(circles, circlesNumber); // формирование массива окружностей В (вершины)
+	FormCircles(circles, circlesNumber, chosenMethod); // формирование массива окружностей В (вершины)
 
 	// количество прямых, которые можно провести через n точек
 	int linesNumber = dotsNumber * (dotsNumber - 1) / 2;
@@ -41,7 +42,7 @@ void Geometry()
 	
 	// __________________________________ Графика _____________________________
 
-	Draw(dots, dotsNumber, circles, circlesNumber, lines, linesNumber);
+	Draw(dots, dotsNumber, circles, circlesNumber, lines, linesNumber, chosenLine);
 
 	delete[] dots;
 	delete[] circles;
@@ -53,14 +54,14 @@ void Geometry()
 
 // __________________ Обработка точек ______________________
 
-void FormDots(Dot* dots, int dotsNumber)
+void FormDots(Dot* dots, int dotsNumber, int chosenMethod)
 {
-	printf("\nChoose the method of dots forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
-	printf("\n Your choice: ");
-	int choice;
-	scanf_s("%d", &choice);
+	//printf("\nChoose the method of dots forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
+	//printf("\n Your choice: ");
+	//int choice;
+	//scanf_s("%d", &choice);
 
-	switch (choice) {
+	switch (chosenMethod) {
 	case 1:
 		EnterDotsByKeyboard(dots, dotsNumber);
 		break;
@@ -124,14 +125,14 @@ void GetDotsFromFile(Dot* dots, int dotsNumber)
 
 // ______________________ Обработка окружностей ___________________________
 
-void FormCircles(Circle* circles, int circlesNumber)
+void FormCircles(Circle* circles, int circlesNumber, int chosenMethod)
 {
-	printf("\nChoose the method of circles forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
-	printf("\n Your choice: ");
-	int choice;
-	scanf_s("%d", &choice);
+	//printf("\nChoose the method of circles forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
+	//printf("\n Your choice: ");
+	//int choice;
+	//scanf_s("%d", &choice);
 
-	switch (choice) {
+	switch (chosenMethod) {
 	case 1:
 		EnterCirclesByKeyboard(circles, circlesNumber);
 		break;
@@ -149,7 +150,7 @@ void EnterCirclesByKeyboard(Circle* circles, int circlesNumber)
 	printf("\n");
 	for (int i = 0; i < circlesNumber; i++) {
 		printf(" Circle %d (x y r): ", i + 1);
-		scanf_s("%d%d%f", &circles[i].x, &circles[i].y, &circles[i].r);
+		scanf_s("%d%d%f", &circles[i].center.x, &circles[i].center.y, &circles[i].r);
 	}
 }
 
@@ -157,10 +158,10 @@ void RandomCircles(Circle* circles, int circlesNumber)
 {
 	printf("\nCircles:");
 	for (int i = 0; i < circlesNumber; i++) {
-		circles[i].x = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
-		circles[i].y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+		circles[i].center.x = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+		circles[i].center.y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
 		circles[i].r = 2.0 * circlesNumber * rand() / RAND_MAX;
-		printf("\nCircle %d: %d %d %.1f", i + 1, circles[i].x, circles[i].y, circles[i].r);
+		printf("\nCircle %d: %d %d %.1f", i + 1, circles[i].center.x, circles[i].center.y, circles[i].r);
 	}
 }
 
@@ -177,22 +178,22 @@ void GetCirclesFromFile(Circle* circles, int circlesNumber)
 
 	int i = 0;
 	while (i < circlesNumber && !(feof(file))) { // считывание из файла
-		fscanf(file, "%d%d%f", &circles[i].x, &circles[i].y, &circles[i].r);
+		fscanf(file, "%d%d%f", &circles[i].center.x, &circles[i].center.y, &circles[i].r);
 		i++;
 	}
 	fclose(file);
 
 	// проверка на непарное число в файле
-	if (circles[i - 1].y < -2000 || circles[i - 1].y > 2000) circles[i - 1].y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+	if (circles[i - 1].center.y < -2000 || circles[i - 1].center.y > 2000) circles[i - 1].center.y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
 	if (circles[i - 1].r < -2000 || circles[i - 1].r > 2000) circles[i - 1].r = 2.0 * circlesNumber * rand() / RAND_MAX;
 	for (i; i < circlesNumber; i++) { // дозаполнение рандомом
-		circles[i].x = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
-		circles[i].y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+		circles[i].center.x = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
+		circles[i].center.y = -2.0 * circlesNumber + 2.0 * circlesNumber * rand() / RAND_MAX;
 	}
 
 	printf("\nThe plenty of circles: \n"); // вывод в консоль
 	for (int i = 0; i < circlesNumber; i++)
-		printf("Circle %d: %d %d   %.1f \n", i + 1, circles[i].x, circles[i].y, circles[i].r);
+		printf("Circle %d: %d %d   %.1f \n", i + 1, circles[i].center.x, circles[i].center.y, circles[i].r);
 }
 
 // ______________________ Задание по варианту ___________________________
@@ -213,7 +214,7 @@ Line MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber, Line*
 			int crossedCircles = 0; // счетчик пересеченных окружностей
 
 			for (int k = 0; k < circlesNumber; k++) { // перебор окружностей
-				float distance = fabs(A * circles[k].x + B * circles[k].y + C) / sqrt(A * A + B * B);
+				float distance = fabs(A * circles[k].center.x + B * circles[k].center.y + C) / sqrt(A * A + B * B);
 				if (distance < circles[k].r)
 					crossedCircles++;
 			}
@@ -230,15 +231,17 @@ Line MyTask(Dot* dots, Circle* circles, int dotsNumber, int circlesNumber, Line*
 		}
 
 	printf("\n\nThe line which crosses the less circles passes dots: (%d; %d) and (%d; %d) \n", 
-		chosenLine.x1, chosenLine.y1, chosenLine.x2, chosenLine.y2);
+		chosenLine.first.x, chosenLine.first.y, chosenLine.second.x, chosenLine.second.y);
 	printf("Crossed circles: %d", minCrossedCircles);
 
+	printf("\n");
+	system("pause");
 	return chosenLine;
 }
 
 // _______________________________ Графика _______________________________________
 
-void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* lines, int linesNumber)
+void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* lines, int linesNumber, Line answerLine)
 {
 	wnd = GetConsoleWindow(); // получаем окно
 	MoveWindow(wnd, 50, 20, 1366, 768, NULL); // двигаем окно на экране
@@ -264,10 +267,6 @@ void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* l
 	// получаем размеры окна
 	GetClientRect(wnd, &windowSize);
 
-	Dot windowCenter; // реальная точка в центре экрана
-	windowCenter.x = (windowSize.right - windowSize.left) / 2;
-	windowCenter.y = (windowSize.bottom - windowSize.top) / 2;
-
 	// границы, в которых лежат точки и окружности (прямые не в счёт)
 	Borders drawBorders = CalcGraphBorders(dots, dotsNumber, circles, circlesNumber); // границы графика
 	Parameter scale = CalcScale(drawBorders); // масштаб нереальные\реальные координаты
@@ -281,7 +280,7 @@ void Draw(Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Line* l
 		Rectangle(dc, windowSize.left, windowSize.top, windowSize.right, windowSize.bottom);
 
 		MakeGrid(drawBorders, MakeAxis(drawBorders, scale), scale);
-		MakeElements(windowCenter, windowSize, dots, dotsNumber, circles, circlesNumber, drawBorders, lines, linesNumber);
+		MakeElements(windowSize, dots, dotsNumber, circles, circlesNumber, drawBorders, lines, linesNumber, answerLine);
 
 		key = _getch();
 	} while (key != KB_ESC);
@@ -373,7 +372,7 @@ Parameter MakeAxis(Borders drawBorders, Parameter scale)
 	return axis;
 }
 
-void MakeElements(Dot windowCenter, RECT windowSize, Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Borders drawBorders, Line* lines, int linesNumber)
+void MakeElements(RECT windowSize, Dot* dots, int dotsNumber, Circle* circles, int circlesNumber, Borders drawBorders, Line* lines, int linesNumber, Line answerLine)
 {
 	HPEN linePen = CreatePen(PS_SOLID, 2, RGB(0, 255, 0));
 	SelectObject(dc, linePen);
@@ -387,13 +386,13 @@ void MakeElements(Dot windowCenter, RECT windowSize, Dot* dots, int dotsNumber, 
 		realCoords.x = windowSize.left + DELTA;
 		// значение функции в левой\правой части графика
 		// в этой строке - в левой части
-		float func = (drawBorders.x_min - lines[i].x1) / (lines[i].y2 - lines[i].y1) * (lines[i].x2 - lines[i].x1) + lines[i].y1;
+		float func = (drawBorders.x_min - lines[i].first.x) / (lines[i].second.y - lines[i].first.y) * (lines[i].second.x - lines[i].first.x) + lines[i].first.y;
 		realCoords.y = windowSize.bottom - (func - drawBorders.y_min) * scale.y - DELTA;
 		MoveToEx(dc, realCoords.x, realCoords.y, 0);
 
 		realCoords.x = windowSize.left + (drawBorders.x_max - drawBorders.x_min) * scale.x + DELTA;
 		// в этой строке - в правой
-		func = (drawBorders.x_max - lines[i].x1) / (lines[i].y2 - lines[i].y1) * (lines[i].x2 - lines[i].x1) + lines[i].y1;
+		func = (drawBorders.x_max - lines[i].first.x) / (lines[i].second.y - lines[i].first.y) * (lines[i].second.x - lines[i].first.x) + lines[i].first.y;
 		realCoords.y = windowSize.bottom - (func - drawBorders.y_min) * scale.y - DELTA;
 		LineTo(dc, realCoords.x, realCoords.y);
 	}
@@ -411,10 +410,28 @@ void MakeElements(Dot windowCenter, RECT windowSize, Dot* dots, int dotsNumber, 
 
 	SelectObject(dc, GetStockObject(NULL_BRUSH));
 	for (int i = 0; i < circlesNumber; i++) {
-		realCoords.x = windowSize.left + (circles[i].x - drawBorders.x_min) * scale.x + DELTA;
-		realCoords.y = windowSize.bottom - (circles[i].y - drawBorders.y_min) * scale.y - DELTA;
+		realCoords.x = windowSize.left + (circles[i].center.x - drawBorders.x_min) * scale.x + DELTA;
+		realCoords.y = windowSize.bottom - (circles[i].center.y - drawBorders.y_min) * scale.y - DELTA;
 		Ellipse(dc, realCoords.x - circles[i].r * scale.x, realCoords.y + circles[i].r * scale.y, realCoords.x + circles[i].r * scale.x, realCoords.y - circles[i].r * scale.y);
 	}
+
+	HPEN answerPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
+	SelectObject(dc, answerPen);
+
+	realCoords.x = windowSize.left + DELTA;
+	// значение функции в левой\правой части графика
+	// в этой строке - в левой части
+	float func = (drawBorders.x_min - answerLine.first.x) / (answerLine.second.y - answerLine.first.y) * (answerLine.second.x - answerLine.first.x) + answerLine.first.y;
+	realCoords.y = windowSize.bottom - (func - drawBorders.y_min) * scale.y - DELTA;
+	MoveToEx(dc, realCoords.x, realCoords.y, 0);
+
+	realCoords.x = windowSize.left + (drawBorders.x_max - drawBorders.x_min) * scale.x + DELTA;
+	// в этой строке - в правой
+	func = (drawBorders.x_max - answerLine.first.x) / (answerLine.second.y - answerLine.first.y) * (answerLine.second.x - answerLine.first.x) + answerLine.first.y;
+	realCoords.y = windowSize.bottom - (func - drawBorders.y_min) * scale.y - DELTA;
+	LineTo(dc, realCoords.x, realCoords.y);
+
+	DeleteObject(answerPen);
 }
 
 Parameter CalcScale(Borders drawBorders)
@@ -444,11 +461,11 @@ Borders CalcGraphBorders(Dot* dots, int dotsNumber, Circle* circles, int circles
 	}
 
 	for (int i = 0; i < circlesNumber; i++) {
-		if (circles[i].x - circles[i].r < example.x_min) example.x_min = circles[i].x - circles[i].r;
-		if (circles[i].x + circles[i].r > example.x_max) example.x_max = circles[i].x + circles[i].r;
+		if (circles[i].center.x - circles[i].r < example.x_min) example.x_min = circles[i].center.x - circles[i].r;
+		if (circles[i].center.x + circles[i].r > example.x_max) example.x_max = circles[i].center.x + circles[i].r;
 
-		if (circles[i].y - circles[i].r < example.y_min) example.y_min = circles[i].x - circles[i].r;
-		if (circles[i].y + circles[i].r > example.y_max) example.y_max = circles[i].x + circles[i].r;
+		if (circles[i].center.y - circles[i].r < example.y_min) example.y_min = circles[i].center.x - circles[i].r;
+		if (circles[i].center.y + circles[i].r > example.y_max) example.y_max = circles[i].center.x + circles[i].r;
 	}
 
 	return example;

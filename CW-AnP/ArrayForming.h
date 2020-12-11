@@ -8,7 +8,7 @@ struct MyArray {
 };
 
 // сформировать массив (parent)
-void FormArray(MyArray* array);
+void FormArray(MyArray* array, int chosenMethod);
 
 // ввести массив с клавиатуры (child 1)
 void EnterArrayByKeyboard(MyArray array);

@@ -5,7 +5,7 @@
 #include "conio.h"
 
 // основная функция
-void Geometry();
+void Geometry(int);
 
 // ______________________ Геометрия _______________________
 
@@ -17,23 +17,20 @@ struct Dot {
 
 // окружность по центру и радиусу
 struct Circle {
-	int x; // абсциса центра
-	int y; // ордината центра
+	Dot center; // центр окружности
 	float r; // radius
 };
 
 // прямая, проходящая через 2 точки
 struct Line {
-	int x1;
-	int y1;
-	int x2;
-	int y2;
+	Dot first; // первая точка
+	Dot second; // вторая точка
 };
 
 // сформировать массив точек 
-void FormDots(Dot*, int);
+void FormDots(Dot*, int, int);
 // сформировать массив окружностей
-void FormCircles(Circle*, int);
+void FormCircles(Circle*, int, int);
 
 // ввести масив точек с клавиатуры (множество А) 
 void EnterDotsByKeyboard(Dot*, int); 
@@ -68,8 +65,7 @@ struct Parameter {
 	float y;
 };
 
-HWND wnd;
-HDC dc;
+
 
 #define DELTA 25 // 1 клеточка (шир-дл)
 #define EDGE_HALF DELTA * 10 // половина оси сетки = 250
@@ -82,13 +78,13 @@ HDC dc;
 #define KB_ESC 27
 
 // отрисовать график
-void Draw(Dot*, int, Circle*, int, Line*, int);
+void Draw(Dot*, int, Circle*, int, Line*, int, Line);
 // нарисовать сетку
 void MakeGrid(Borders, Parameter axis, Parameter scale);
 // нарисовать оси
 Parameter MakeAxis(Borders, Parameter scale);
 // нарисовать элементы
-void MakeElements(Dot, RECT, Dot*, int, Circle*, int, Borders, Line*, int);
+void MakeElements(RECT, Dot*, int, Circle*, int, Borders, Line*, int, Line);
 
 // вычислить масштаб
 Parameter CalcScale(Borders);

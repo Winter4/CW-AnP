@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "ArrayForming.h"
 
-void FormArray(MyArray* array)
+void FormArray(MyArray* array, int chosenMethod)
 {
 	// ввод кол-ва элементов
 	printf(" Enter the number of array items: ");
@@ -9,12 +9,12 @@ void FormArray(MyArray* array)
 
 	array->items = new float[array->number];
 
-	printf("\nChoose the method of array forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
-	printf("\n Your choice: ");
-	int choice;
-	scanf_s("%d", &choice);
+	//printf("\nChoose the method of array forming \n 1 - Enter by keyboard \n 2 - Random \n 3 - Get from the file");
+	//printf("\n Your choice: ");
+	//int choice;
+	//scanf_s("%d", &choice);
 
-	switch (choice) {
+	switch (chosenMethod) {
 	case 1:
 		EnterArrayByKeyboard(*array);
 		break;

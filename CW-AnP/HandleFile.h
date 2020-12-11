@@ -3,7 +3,7 @@
 #include "ArrayForming.h"
 
 //основная функция
-void HandleFile();
+void HandleFile(int);
 
 // занести массив в файл
 void WriteArrayToFile(MyArray, FILE*);
@@ -13,8 +13,8 @@ void MyTask(FILE*, int*);
 float ArithmeticMean(FILE*);
 // найти (max + min) / 2
 float HalfOfMaxPlusMin(FILE*);
-// линейный сдвиг; itemToDelete - номер элемента, который нужно удалить,
-// itemsNumber - количество элементов массива
+// линейный сдвиг; int itemToDelete - номер элемента, который нужно удалить,
+// int* itemsNumber - количество элементов массива
 void FileLinearShift(FILE*, int, int*);
 
 // вывести файл на экран

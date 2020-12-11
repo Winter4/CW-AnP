@@ -3,10 +3,8 @@
 #include "ArrayForming.h"
 
 // задание сортировки
-void Sorting();
+void Sorting(int);
 
-// вывести массив
-void PrintArray(MyArray);
 // свап двух значений
 void SwapTwoItems(float*, float*);
 

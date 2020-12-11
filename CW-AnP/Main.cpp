@@ -23,8 +23,12 @@ void PrintText(HDC dc, int x, int y, const char* s)
 	DeleteObject(font);
 }
 
-void DrawSmallTales(HDC dc, HBRUSH menuBrushLarge, HBRUSH menuBrushSmall, HBRUSH menuBrushChosen, int chosenTale, int dy)
+void DrawSmallTales(HDC dc, int chosenTale, int dy, const char* msg1, const char* msg2, const char* msg3)
 {
+	HBRUSH menuBrushLarge = CreateSolidBrush(RGB(169, 169, 169));
+	HBRUSH menuBrushSmall = CreateSolidBrush(RGB(230, 230, 230));
+	HBRUSH menuBrushChosen = CreateSolidBrush(RGB(218, 165, 32));
+
 	SelectObject(dc, menuBrushLarge);
 	for (int i = 0; i < 3; i++)
 		Rectangle(dc, 20, 20 + dy * i, 220, 80 + dy * i);
@@ -38,53 +42,55 @@ void DrawSmallTales(HDC dc, HBRUSH menuBrushLarge, HBRUSH menuBrushSmall, HBRUSH
 	for (int i = 0; i < 3; i++)
 		Rectangle(dc, 30, 30 + dy * i, 210, 70 + dy * i);
 	DeleteObject(menuBrushSmall);
+
+	PrintText(dc, 60, 40 + dy * 0, msg1);
+	PrintText(dc, 60, 40 + dy * 1, msg2);
+	PrintText(dc, 60, 40 + dy * 2, msg3);
 }
 
-void DrawLargeTale(HDC dc, HBRUSH menuBrushChosen, HBRUSH menuBrushSmall)
+void DrawLargeTale(HDC dc)
 {
+	HBRUSH menuBrushLarge = CreateSolidBrush(RGB(169, 169, 169));
+	HBRUSH menuBrushSmall = CreateSolidBrush(RGB(230, 230, 230));
+	HBRUSH menuBrushChosen = CreateSolidBrush(RGB(218, 165, 32));
+
 	SelectObject(dc, menuBrushChosen);
-	Rectangle(dc, 260, 30, 850, 130);
+	Rectangle(dc, 260, 30, 850, 150);
 	DeleteObject(menuBrushChosen);
 
 	SelectObject(dc, menuBrushSmall);
-	Rectangle(dc, 280, 50, 830, 110);
+	Rectangle(dc, 280, 50, 830, 130);
 	DeleteObject(menuBrushSmall);
 }
 
 int main() 
 {
+	srand(time(0));
 	setlocale(LC_ALL, "russian");
 	HWND wnd = GetConsoleWindow();
 	HDC dc = GetDC(wnd);
 
-	HBRUSH menuBrushLarge = CreateSolidBrush(RGB(169, 169, 169));
-	HBRUSH menuBrushSmall = CreateSolidBrush(RGB(230, 230, 230));
-	HBRUSH menuBrushChosen = CreateSolidBrush(RGB(218, 165, 32));
+	
 
 	int dy = 60;
-	int chosenTale = 0;
-	int key;
+	int chosenTask = 0, chosenMethod = 0;
+	int key = 0;
 
-	while (true) {
+	while (key != KB_ESC) {
 		system("cls");
 		
-		DrawSmallTales(dc, menuBrushLarge, menuBrushSmall, menuBrushChosen, chosenTale, dy);
-		
-		PrintText(dc, 60, 40 + dy * 0, "Сортировка");
-		PrintText(dc, 60, 40 + dy * 1, "Работа с файлом");
-		PrintText(dc, 60, 40 + dy * 2, "Геометрия");
+		DrawSmallTales(dc, chosenTask, dy, "Сортировка", "Бинарные файлы", "Геометрия");
+		DrawLargeTale(dc);
 
-		DrawLargeTale(dc, menuBrushChosen, menuBrushSmall);
-
-		switch (chosenTale) {
+		switch (chosenTask) {
 		case 0:
-			PrintText(dc, 290, 80, "Задана последовательность чисел длиной N. Первые N/2 чисел упорядочить");
-			PrintText(dc, 290, 80, "по убыванию, а последние N/2 по возрастанию методом обмена.");
+			PrintText(dc, 290, 63, "Задана последовательность чисел длиной N. Первые N/2 чисел упорядочить");
+			PrintText(dc, 290, 83, "по убыванию, а последние N/2 по возрастанию методом обмена.");
 			break;
 
 		case 1:
-			PrintText(dc, 290, 60, "Удалить элементы, значения которых лежат на интервале между");
-			PrintText(dc, 290, 80, "средним арифметическим значением и значением (max + min) / 2.");
+			PrintText(dc, 290, 63, "Удалить элементы, значения которых лежат на интервале между");
+			PrintText(dc, 290, 83, "средним арифметическим значением и значением (max + min) / 2.");
 			break;
 
 		case 2:
@@ -98,38 +104,59 @@ int main()
 			key = _getch();
 		} while (!(key == NUMPAD_UP || key == NUMPAD_DOWN || key == KB_ESC || key == KB_ENTER));
 
-		if (key == KB_ENTER) {
-			system("cls");
-			switch (chosenTale) {
-			case 0:
-				Sorting();
+		if (key != KB_ENTER) {
+			switch (key) {
+			case NUMPAD_UP:
+				if (chosenTask == 0) chosenTask = 2;
+				else chosenTask--;
 				break;
 
-			case 1:
-				HandleFile();
-				break;
-
-			case 2:
-				Geometry();
+			case NUMPAD_DOWN:
+				if (chosenTask == 2) chosenTask = 0;
+				else chosenTask++;
 				break;
 			}
 		}
 		else {
-			switch (key) {
-			case NUMPAD_UP:
-				if (chosenTale == 0) chosenTale = 2;
-				else chosenTale--;
-				break;
+			while (key != KB_ESC) {
+				system("cls");
 
-			case NUMPAD_DOWN:
-				if (chosenTale == 2) chosenTale = 0;
-				else chosenTale++;
-				break;
+				DrawSmallTales(dc, chosenMethod, dy, "Ввод с клавиатуры", "Рандом", "Ввод с файла");
+				do {
+					key = _getch();
+				} while (!(key == NUMPAD_UP || key == NUMPAD_DOWN || key == KB_ESC || key == KB_ENTER));
 
-			case KB_ESC:
-				return 0;
-				break;
+				if (key != KB_ENTER) {
+					switch (key) {
+					case NUMPAD_UP:
+						if (chosenMethod == 0) chosenMethod = 2;
+						else chosenMethod--;
+						break;
+
+					case NUMPAD_DOWN:
+						if (chosenMethod == 2) chosenMethod = 0;
+						else chosenMethod++;
+						break;
+					}
+				}
+				else {
+					system("cls");
+					switch (chosenTask) {
+					case 0:
+						Sorting(chosenMethod + 1);
+						break;
+
+					case 1:
+						HandleFile(chosenMethod + 1);
+						break;
+
+					case 2:
+						Geometry(chosenMethod + 1);
+						break;
+					}
+				}
 			}
+			key = chosenMethod = chosenTask = 0;
 		}
 	}
 	

@@ -4,11 +4,10 @@
 // fwrite
 // fread
 
-void HandleFile()
+void HandleFile(int chosenMethod)
 {
-	
 	MyArray array = {0};
-	FormArray(&array); // формируем массив
+	FormArray(&array, chosenMethod); // формируем массив
 
 	// создаём файл
 	FILE* file;

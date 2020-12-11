@@ -6,10 +6,10 @@
 
 #include "Sorting.h"
 
-void Sorting()
+void Sorting(int chosenMethod)
 {
 	MyArray array = { 0 };
-	FormArray(&array); // сформировать массив
+	FormArray(&array, chosenMethod); // сформировать массив
 	
 	printf("\nChoose the method of array printing: ");
 	printf("\n1 - Print all \n2 - Print by step \n");
@@ -67,7 +67,7 @@ void SortArray(MyArray array) {
 				SwapTwoItems(&(array.items[i + 1]), &(array.items[i]));
 				flag++;
 			}
-	} while (flag != 0);
+	} while (flag);
 }
 
 void SortByStep(MyArray array)
