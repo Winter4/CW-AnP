@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "io.h"
 #include "ArrayForming.h"
 
 //основная функция
@@ -18,4 +19,4 @@ float HalfOfMaxPlusMin(FILE*);
 void FileLinearShift(FILE*, int, int*);
 
 // вывести файл на экран
-void PrintFile(FILE*);
+void PrintFile(FILE*, int);

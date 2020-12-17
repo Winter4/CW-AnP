@@ -156,7 +156,8 @@ int main()
 					}
 				}
 			}
-			key = chosenMethod = chosenTask = 0;
+			chosenMethod = chosenTask = 0;
+			key = NULL;
 		}
 	}
 	

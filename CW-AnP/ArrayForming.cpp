@@ -4,8 +4,10 @@
 void FormArray(MyArray* array, int chosenMethod)
 {
 	// ââîä êîë-âà ıëåìåíòîâ
-	printf(" Enter the number of array items: ");
-	scanf("%d", &array->number);
+	do {
+		printf(" Enter the number of array items: ");
+		scanf_s("%d", &array->number);
+	} while (array->number < 1);
 
 	array->items = new float[array->number];
 
